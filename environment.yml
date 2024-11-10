@@ -1,0 +1,22 @@
+name: recipe
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - spacy
+  - nltk
+  - jupyterlab
+  - ftfy
+  - unidecode
+  - inflection
+  - requests
+  - beautifulsoup4
+  - pip
+  - pip:
+      - langdetect
+      - pandas
+      - emoji
+      - cairosvg
+      - matplotlib
+      - scikit-learn
+      - rapidfuzz
