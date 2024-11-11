@@ -12,6 +12,7 @@ def fetch_page_from_url(url):
         response = requests.get(url)
         response.raise_for_status()
 
+        print(response.content)
         soup = BeautifulSoup(response.content, 'html.parser')
         
         title_element = soup.find("h1", class_="headline")
@@ -24,9 +25,9 @@ def fetch_page_from_url(url):
 
         # FOR ALLRECIPES: ingredients and instructions in <script class="comp allrecipes-schema mntl-schema-unified" id="allrecipes-schema_1-0" type="application/ld+json">
         details = [item.text.strip() for item in soup.find_all("script", class_="comp allrecipes-schema mntl-schema-unified")]
-        details_json = json.loads(details[0])[0]
-        ingredients = details_json['recipeIngredient']
-        instructions = details_json['recipeInstructions']
+        details_json = json.loads(details[0])
+        ingredients = details_json[0]['recipeIngredient']
+        instructions = details_json[0]['recipeInstructions']
 
         recipe_data = f"Title: {title}\n\nIngredients:\n" + "\n".join(ingredients) + "\n\nInstructions:\n" + "\n".join([i['text'] for i in instructions])
 
