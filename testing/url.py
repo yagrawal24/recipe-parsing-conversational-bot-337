@@ -13,10 +13,7 @@ def fetch_page_from_url(url):
         response.raise_for_status()
 
         soup = BeautifulSoup(response.content, 'html.parser')
-        # for i in soup:
-        #     print(i, "\n\n--------------------------\n\n")
-        #     for j in i:
-        #         print(j, "\n-_-_-_-_-_-_-_-\n")
+        
         title_element = soup.find("h1", class_="headline")
         if title_element:
             title = title_element.text.strip()
@@ -25,7 +22,7 @@ def fetch_page_from_url(url):
             url_title = parsed_url.path.split('/')[-2]
             title = inflection.titleize(url_title.replace('-', ' '))
 
-        # ingredients in <script class="comp allrecipes-schema mntl-schema-unified" id="allrecipes-schema_1-0" type="application/ld+json">
+        # FOR ALLRECIPES: ingredients and instructions in <script class="comp allrecipes-schema mntl-schema-unified" id="allrecipes-schema_1-0" type="application/ld+json">
         details = [item.text.strip() for item in soup.find_all("script", class_="comp allrecipes-schema mntl-schema-unified")]
         details_json = json.loads(details[0])[0]
         ingredients = details_json['recipeIngredient']
