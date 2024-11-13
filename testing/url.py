@@ -2,6 +2,20 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import inflection
+import re
+
+def extract_quantity(ingredient_line):
+    quantity_pattern = r'(\b\d+\s?\d*\/?\d*\
+        b|\b\d+\.\d+\b)'
+    match = re.search(quantity_pattern, ingredient_line)
+    return match.group(0) if match else None
+
+def extract_ingredient_name(ingredient_line, quantity):
+    if quantity:
+        ingredient_name = ingredient_line.replace(quantity, "").strip()
+    else:
+        ingredient_name = ingredient_line.strip()
+    return ingredient_name
 
 def fetch_page_from_url(url):
     if "allrecipes.com" not in url:
@@ -12,7 +26,6 @@ def fetch_page_from_url(url):
         response.raise_for_status()
 
         soup = BeautifulSoup(response.content, 'html.parser')
-
         title_element = soup.find("h1", class_="headline")
         if title_element:
             title = title_element.text.strip()
@@ -21,11 +34,17 @@ def fetch_page_from_url(url):
             url_title = parsed_url.path.split('/')[-2]
             title = inflection.titleize(url_title.replace('-', ' '))
 
-        ingredients = [item.text.strip() for item in soup.find_all("span", class_="ingredients-item-name")]
+        ingredients_data = []
+        ingredients = soup.find_all("span", class_="ingredients-item-name")
+
+        for ingredient in ingredients:
+            ingredient_text = ingredient.text.strip()
+            quantity = extract_quantity(ingredient_text)
+            ingredient_name = extract_ingredient_name(ingredient_text, quantity)
+            ingredients_data.append(f"{ingredient_name} (Quantity: {quantity})" if quantity else ingredient_name)
 
         instructions = [step.text.strip() for step in soup.find_all("div", class_="paragraph")]
-
-        recipe_data = f"Title: {title}\n\nIngredients:\n" + "\n".join(ingredients) + "\n\nInstructions:\n" + "\n".join(instructions)
+        recipe_data = f"Title: {title}\n\nIngredients:\n" + "\n".join(ingredients_data) + "\n\nInstructions:\n" + "\n".join(instructions)
 
         with open("recipe_data.txt", "w") as file:
             file.write(recipe_data)
