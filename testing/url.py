@@ -39,5 +39,6 @@ def fetch_page_from_url(url):
     except requests.exceptions.RequestException as e:
         return f"An error occurred: {e}"
 
-url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
-fetch_page_from_url(url)
+if __name__ == "__main__":
+    url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
+    fetch_page_from_url(url)
