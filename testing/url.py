@@ -12,6 +12,7 @@ def fetch_page_from_url(url):
         response = requests.get(url)
         response.raise_for_status()
 
+<<<<<<< Updated upstream
         # old, worked for simple recipes (1 ingredients list) but not more complex ones (2+ ingredient lists)
         # soup = BeautifulSoup(response.content, 'html.parser')
         # title_element = soup.find("h1", class_="headline")
@@ -19,6 +20,10 @@ def fetch_page_from_url(url):
         soup = BeautifulSoup(response.content, 'html5lib')
         
         title_element = soup.find("h1", class_="article-heading text-headline-400")
+=======
+        # print(response.content)
+        soup = BeautifulSoup(response.content, 'html.parser')
+>>>>>>> Stashed changes
         
         if title_element:
             title = title_element.text.strip()
@@ -61,6 +66,7 @@ def fetch_page_from_url(url):
     except requests.exceptions.RequestException as e:
         return f"An error occurred: {e}"
 
+<<<<<<< Updated upstream
 # put ingredients and instructions in a .txt file for human readability
 def print_ingredients_list(ingredients_list):
     ingredients_print = []
@@ -71,6 +77,10 @@ def print_ingredients_list(ingredients_list):
                 s += i[j] + " "
         ingredients_print.append(s)
     return ingredients_print
+=======
+# How to use beautiful soup on wikipedia pages    
+# https://www.datahen.com/blog/web-scraping-using-python-beautiful-soup/
+>>>>>>> Stashed changes
 
 if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
