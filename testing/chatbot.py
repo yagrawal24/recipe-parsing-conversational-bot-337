@@ -1,5 +1,7 @@
 from url import *
 from googlesearch import search
+import re
+import urllib.parse
 
 def fetch_ingredient_quantity(ingredients, ingredient):
     for i in ingredients:
@@ -11,6 +13,7 @@ def conversation():
     
     ingredients, instructions = fetch_page_from_url(text)
     step = 0
+    pattern_how = r"(?i)^how\s+(to|do)\b"
 
     while text != "Done":
         text = input("\nWhat would you like to do next?\n")
@@ -33,6 +36,12 @@ def conversation():
             # Need to create a better query somehow
             print("Please look at the following link for reference:")
             print([i for i in search("How to:" + instructions[step-1], stop=1)][0])
+
+        elif re.match(pattern_how, text):
+            base_url = "https://www.youtube.com/results?search_query="
+            encoded_query = urllib.parse.quote(text)
+            final_url = f"{base_url}{encoded_query}"
+            print(f"No worries. I found a reference for you: {final_url}")
             
         # How much X do I need?
         
