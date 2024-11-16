@@ -14,6 +14,7 @@ def conversation():
     ingredients, instructions = fetch_page_from_url(text)
     step = 0
     pattern_how = r"(?i)^how\s+(to|do)\b"
+    pattern_what = r"(?i)^what\s+is\b"
 
     while text != "Done":
         text = input("\nWhat would you like to do next?\n")
@@ -33,7 +34,6 @@ def conversation():
             print(instructions[step-1])
             
         elif text == "How do I do that?":
-            # Need to create a better query somehow
             print("Please look at the following link for reference:")
             print([i for i in search("How to:" + instructions[step-1], stop=1)][0])
 
@@ -42,6 +42,14 @@ def conversation():
             encoded_query = urllib.parse.quote(text)
             final_url = f"{base_url}{encoded_query}"
             print(f"No worries. I found a reference for you: {final_url}")
+
+        elif re.match(pattern_what, text):
+            query = text
+            try:
+                result = [i for i in search(query, num=1, stop=1, pause=2)][0]
+                print(f"Here's a helpful link for your question: {result}")
+            except Exception as e:
+                print(f"Sorry, I couldn't find an answer for that. Error: {e}")
             
         # How much X do I need?
         
