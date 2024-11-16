@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 import inflection
 import re
 import spacy
-import json
+from googlesearch import search
 
 # Load SpaCy model
 nlp = spacy.load("en_core_web_md")
@@ -69,6 +69,13 @@ def extract_tools(instructions):
                     tools_set.add(chunk_text)
     return list(tools_set)
 
+def google_search(query, num_results=1):
+    try:
+        results = list(search(query, num=num_results, stop=num_results, pause=2))
+        return results[0] if results else "No results found."
+    except Exception as e:
+        return f"Error performing search: {e}"
+
 # GUI Code
 class RecipeChatbotGUI:
     def __init__(self, root):
@@ -128,19 +135,17 @@ class RecipeChatbotGUI:
                 self.output_box.insert(tk.END, self.instructions[self.step] + "\n")
                 self.step += 1
 
-        elif user_text == "What is the previous step?":
-            if self.step > 1:
-                self.output_box.insert(tk.END, self.instructions[self.step - 2] + "\n")
-                self.step -= 1
-            else:
-                self.output_box.insert(tk.END, "This is the first step.\n")
-
         elif user_text == "What tools do I need?":
             if not self.instructions:
                 self.output_box.insert(tk.END, "No instructions found to extract tools.\n")
             else:
                 tools = extract_tools(self.instructions)
                 self.output_box.insert(tk.END, "Tools: " + ", ".join(tools) + "\n")
+
+        elif user_text.startswith("What is"):
+            query = user_text
+            search_result = google_search(query)
+            self.output_box.insert(tk.END, f"Here's a helpful link: {search_result}\n")
 
         else:
             self.output_box.insert(tk.END, "I'm sorry, I don't understand that command.\n")
