@@ -12,6 +12,7 @@ dependencies:
   - requests
   - beautifulsoup4
   - pip
+  - html5lib
   - pip:
       - langdetect
       - pandas
@@ -20,3 +21,7 @@ dependencies:
       - matplotlib
       - scikit-learn
       - rapidfuzz
+      - google
+  - python
+  - pip:
+      - "python -m spacy download en_core_web_md"
