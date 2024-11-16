@@ -74,4 +74,5 @@ def print_ingredients_list(ingredients_list):
 
 if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
+    # url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
     fetch_page_from_url(url)
