@@ -44,6 +44,7 @@ def conversation():
             print(f"No worries. I found a reference for you: {final_url}")
 
         elif re.match(pattern_what, text):
+            # https://www.geeksforgeeks.org/performing-google-search-using-python-code/
             query = text
             try:
                 result = [i for i in search(query, num=1, stop=1, pause=2)][0]
