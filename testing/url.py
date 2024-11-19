@@ -2,7 +2,12 @@ import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import inflection
+import re
+import spacy
 import json
+
+# Load SpaCy model
+nlp = spacy.load("en_core_web_md")
 
 def fetch_page_from_url(url):
     if "allrecipes.com" not in url:
@@ -71,6 +76,23 @@ def print_ingredients_list(ingredients_list):
                 s += i[j] + " "
         ingredients_print.append(s)
     return ingredients_print
+
+def extract_tools(instructions):
+    tools_set = set()
+    tool_patterns = r"\b(?:oven|pot|skillet|bowl|pan|foil|sheet|knife|dish|grater|plate|whisk|rack)\b"
+    kitchen_tool_ref = nlp("kitchen tool")
+    for instruction in instructions:
+        doc = nlp(instruction)
+        for chunk in doc.noun_chunks:
+            chunk_text = chunk.text.lower()
+            if re.search(tool_patterns, chunk_text):
+                tools_set.add(chunk_text)
+            elif chunk.vector_norm and kitchen_tool_ref.vector_norm:
+                similarity = chunk.similarity(kitchen_tool_ref)
+                if similarity > 0.5:
+                    tools_set.add(chunk_text)
+    return list(tools_set)
+
 
 if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"

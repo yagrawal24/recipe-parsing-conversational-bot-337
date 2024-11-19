@@ -37,6 +37,7 @@ def conversation():
     pattern_how_much = r"(?i)how much (\w+)"
     pattern_how_much_step = r"(?i)how much (\w+) (do|is|for) (this step|step \d+)"
     pattern_ingredients_step =  r"(?i)what ingredients do i need for (this|next|previous|\d+(?:st|nd|rd|th)?) step"
+    pattern_what = r"(?i)^what\s+is\b"
 
     while text != "Done":
         text = input("\nWhat would you like to do next?\n")
@@ -56,7 +57,6 @@ def conversation():
             print(instructions[step-1])
             
         elif text == "How do I do that?":
-            # Need to create a better query somehow
             print("Please look at the following link for reference:")
             print([i for i in search("How to:" + instructions[step-1], stop=1)][0])
 
