@@ -3,50 +3,30 @@ version: "3.1"
 nlu:
 - intent: greet
   examples: |
-    - hey
-    - hello
     - hi
-    - hello there
+    - hello
+    - how are you
     - good morning
     - good evening
-    - moin
-    - hey there
-    - let's go
-    - hey dude
-    - goodmorning
-    - goodevening
-    - good afternoon
+    - hey
 
 - intent: goodbye
   examples: |
-    - cu
-    - good by
-    - cee you later
-    - good night
     - bye
     - goodbye
-    - have a nice day
-    - see you around
-    - bye bye
-    - see you later
+    - ciao
 
 - intent: affirm
   examples: |
     - yes
-    - y
-    - indeed
-    - of course
-    - that sounds good
-    - correct
+    - yeah
+    - yep
 
 - intent: deny
   examples: |
     - no
-    - n
     - never
     - I don't think so
-    - don't like that
-    - no way
     - not really
   
 - intent: provide_url
@@ -56,7 +36,15 @@ nlu:
     - [https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/](https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/)
     - I want to cook this: [https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/](https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/)
     - I have this recipe: https://www.allrecipes.com/recipe/12345/
-    
+
+- intent: ask_ingredients
+  examples: |
+    - What are the ingredients?
+    - Tell me the ingredients.
+    - Can you list the ingredients?
+    - Ingredients please.
+    - I want to know the ingredients.
+
 - intent: bot_challenge
   examples: |
     - are you a bot?

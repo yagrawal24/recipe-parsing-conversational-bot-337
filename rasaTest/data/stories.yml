@@ -9,16 +9,30 @@ stories:
   - intent: goodbye
   - action: utter_goodbye
 
-- story: Provide recipe URL
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - intent: provide_url
-  - action: action_fetch_recipe
+# - story: Provide recipe URL
+#   steps:
+#   - intent: greet
+#   - action: utter_greet
+#   - intent: provide_url
+#   - action: action_fetch_recipe
 
-- story: Greet and provide recipe URL
+# - story: Provide recipe and ask for ingredients
+#   steps:
+#   - intent: provide_url
+#   - action: action_fetch_recipe
+#   - intent: ask_ingredients
+#   - action: action_list_ingredients
+
+- story: Fetch recipe and ask for ingredients
   steps:
-  - intent: greet
-  - action: utter_greet
   - intent: provide_url
-  - action: action_fetch_recipe
+  - action: action_fetch_recipe_and_ingredients
+  - intent: ask_ingredients
+  - action: action_fetch_recipe_and_ingredients
+
+# - story: Greet and provide recipe URL
+#   steps:
+#   - intent: greet
+#   - action: utter_greet
+#   - intent: provide_url
+#   - action: action_fetch_recipe

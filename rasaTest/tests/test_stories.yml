@@ -6,16 +6,34 @@ stories:
     intent: greet
   - action: utter_greet
 
-- story: provide recipe URL after greeting
+# - story: provide recipe URL after greeting
+#   steps:
+#   - user: |
+#       hello!
+#     intent: greet
+#   - action: utter_greet
+#   - user: |
+#       https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
+#     intent: provide_url
+#   - action: action_fetch_recipe
+
+# - story: Provide recipe and ask for ingredients
+#   steps:
+#   - intent: provide_url
+#   - action: action_fetch_recipe
+#   - intent: ask_ingredients
+#   - action: action_list_ingredients
+
+- story: Fetch recipe and ask ingredients
   steps:
-  - user: |
-      hello!
-    intent: greet
-  - action: utter_greet
-  - user: |
-      https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
-    intent: provide_url
-  - action: action_fetch_recipe
+  - intent: provide_url
+    user: |
+      https://www.allrecipes.com/recipe/26482/candied-yams/
+  - action: action_fetch_recipe_and_ingredients
+  - intent: ask_ingredients
+    user: |
+      What are the ingredients?
+  - action: action_fetch_recipe_and_ingredients
 
 - story: say goodbye
   steps:
