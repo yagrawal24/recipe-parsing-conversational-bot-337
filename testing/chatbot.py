@@ -36,7 +36,7 @@ def conversation():
     pattern_how = r"(?i)^how\s+(to|do)\b"
     pattern_how_much = r"(?i)how much (\w+)"
     pattern_how_much_step = r"(?i)how much (\w+) (do|is|for) (this step|step \d+)"
-    pattern_ingredients_step =  r"(?i)what ingredients do i need for (this|next|previous|\d+(?:st|nd|rd|th)?) step"
+    pattern_ingredients_step =  r"(?i)what (ingredients|tools) do i need for (this|next|previous|\d+(?:st|nd|rd|th)?) step"
     pattern_what = r"(?i)^what\s+is\b"
 
     while text != "Done":
@@ -44,6 +44,9 @@ def conversation():
         
         if text == "What are the ingredients?":
             for i in print_ingredients_list(ingredients):
+                print(i)
+        if text == "What are the tools?":
+            for i in extract_tools(instructions):
                 print(i)
         
         elif text == "What is the next step?":
@@ -113,19 +116,29 @@ def conversation():
                 print("That step does not exist.")
             else:
                 # get a list of all ingredients
-                step_ingredients = get_step_information(instructions[step_number-1], ingredients, "ingredients")
-                            
-                ingredient_quantities = {}   
-                for i in step_ingredients:
-                    quantity = fetch_ingredient_quantity(ingredients, i)
-                    ingredient_quantities.update({i:quantity})
-                    
-                if ingredient_quantities:
-                    print(f"You need the following for step {step_number}:")
-                    for i in ingredient_quantities:
-                        print(f"\t{ingredient_quantities[i]} of {i}")
-                else:
-                    print(f"No ingredients are needed for this step.")
+                if "ingredients" in text.lower():
+                    step_ingredients = get_step_information(instructions[step_number-1], ingredients, "ingredients")
+                                
+                    ingredient_quantities = {}   
+                    for i in step_ingredients:
+                        quantity = fetch_ingredient_quantity(ingredients, i)
+                        ingredient_quantities.update({i:quantity})
+                        
+                    if ingredient_quantities:
+                        print(f"You need the following for step {step_number}:")
+                        for i in ingredient_quantities:
+                            print(f"\t{ingredient_quantities[i]} of {i}")
+                    else:
+                        print(f"No ingredients are needed for this step.")
+                if "tools" in text.lower():
+                    tools = extract_tools([instructions[step_number-1]])
+                        
+                    if tools:
+                        print(f"You need the following for step {step_number}:")
+                        for i in tools:
+                            print(f"\t{i}")
+                    else:
+                        print(f"No ingredients are needed for this step.")
         
 
         
