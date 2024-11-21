@@ -1,6 +1,3 @@
-#### This file contains tests to evaluate that your bot behaves as expected.
-#### If you want to learn more, please see the docs: https://rasa.com/docs/rasa/testing-your-assistant
-
 stories:
 - story: say hello
   steps:
@@ -8,6 +5,17 @@ stories:
       hello!
     intent: greet
   - action: utter_greet
+
+- story: provide recipe URL after greeting
+  steps:
+  - user: |
+      hello!
+    intent: greet
+  - action: utter_greet
+  - user: |
+      https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
+    intent: provide_url
+  - action: action_fetch_recipe
 
 - story: say goodbye
   steps:

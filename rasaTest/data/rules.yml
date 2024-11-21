@@ -12,6 +12,22 @@ rules:
   - intent: goodbye
   - action: utter_goodbye
 
+- rule: Ask for URL
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
+
+- rule: Ask for a URL after greeting
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - action: action_listen
+
+- rule: Handle recipe URL
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
+
 - rule: Say 'I am a bot' anytime the user challenges
   steps:
   - intent: bot_challenge

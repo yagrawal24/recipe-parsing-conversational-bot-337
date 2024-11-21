@@ -8,3 +8,17 @@ stories:
   - action: utter_greet
   - intent: goodbye
   - action: utter_goodbye
+
+- story: Provide recipe URL
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: provide_url
+  - action: action_fetch_recipe
+
+- story: Greet and provide recipe URL
+  steps:
+  - intent: greet
+  - action: utter_greet
+  - intent: provide_url
+  - action: action_fetch_recipe

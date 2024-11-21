@@ -5,20 +5,27 @@ intents:
   - goodbye
   - affirm
   - deny
+  - provide_url
   - bot_challenge
 
 responses:
   utter_greet:
-  - text: "Hello, My name is Gordon! I will be your personal sous chef for today."
+    - text: "Hello, My name is Gordon! I will be your personal sous chef for today. Please copy and paste a recipe URL from AllRecipes.com to get started."
 
   utter_goodbye:
-  - text: "Goodbye"
+    - text: "Goodbye"
+
+  utter_ask_url:
+    - text: "Please provide the recipe URL from AllRecipes.com."
+
+  utter_invalid_url:
+    - text: "That doesn't look like a valid AllRecipes.com URL. Please try again."
 
   utter_iamabot:
-  - text: "I am a bot, powered by Rasa."
+    - text: "I am a bot, powered by Rasa."
 
-# actions:
-#   - action_hello_world
+actions:
+  - action_fetch_recipe
 
 session_config:
   session_expiration_time: 60

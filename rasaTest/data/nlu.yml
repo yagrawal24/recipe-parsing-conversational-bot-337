@@ -48,7 +48,15 @@ nlu:
     - don't like that
     - no way
     - not really
-
+  
+- intent: provide_url
+  examples: |
+    - Here is the recipe URL: [https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/](https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/)
+    - The URL is [https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/](https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/)
+    - [https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/](https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/)
+    - I want to cook this: [https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/](https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/)
+    - I have this recipe: https://www.allrecipes.com/recipe/12345/
+    
 - intent: bot_challenge
   examples: |
     - are you a bot?
