@@ -1,0 +1,25 @@
+version: "3.1"
+
+intents:
+  - greet
+  - goodbye
+  - affirm
+  - deny
+  - bot_challenge
+
+responses:
+  utter_greet:
+  - text: "Hello, My name is Gordon! I will be your personal sous chef for today."
+
+  utter_goodbye:
+  - text: "Goodbye"
+
+  utter_iamabot:
+  - text: "I am a bot, powered by Rasa."
+
+# actions:
+#   - action_hello_world
+
+session_config:
+  session_expiration_time: 60
+  carry_over_slots_to_new_session: true
