@@ -29,3 +29,12 @@
     - List the cooking methods
     - Tell me the methods of cooking
     - What are the techniques used?
+    - What is the current step?
+    - Tell me the current step.
+    - What's the step I'm on?
+    - What is the next step?
+    - Tell me the next step.
+    - What's after this step?
+    - What is the previous step?
+    - Tell me the previous step.
+    - What's the step before this one?

@@ -40,9 +40,10 @@ pipeline:
     min_ngram: 1
     max_ngram: 4
   - name: "DIETClassifier"
-    epochs: 100
+    epochs: 150
+    constrain_similarities: true
   - name: FallbackClassifier
-    threshold: 0.4
+    threshold: 0.3
     ambiguity_threshold: 0.1
   - name: "EntitySynonymMapper"
 
@@ -58,9 +59,11 @@ policies:
 #     epochs: 100
 #   - name: RulePolicy
   - name: TEDPolicy
-    max_history: 5
+    max_history: 10
     epochs: 200
     batch_size: 50
     max_training_samples: 300
   - name: MemoizationPolicy
+    max_history: 10
   - name: RulePolicy
+    enable_fallback_prediction: true

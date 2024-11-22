@@ -32,6 +32,28 @@ stories:
   - intent: ask_cooking_methods
   - action: action_list_cooking_methods
 
+- story: Load recipe and navigate steps
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
+  - intent: ask_current_step
+  - action: action_current_step
+  - intent: ask_next_step
+  - action: action_next_step
+  - intent: ask_previous_step
+  - action: action_previous_step
+
+- story: Ask for full recipe
+  steps:
+  - intent: provide_url
+    user: |
+      https://www.allrecipes.com/recipe/53715/shredded-brussels-sprouts/
+  - action: action_fetch_recipe
+  - intent: ask_full_recipe
+    user: |
+      Show me the full recipe.
+  - action: action_print_full_recipe
+
 - story: Ask what is
   steps:
   - intent: what_is
@@ -45,3 +67,31 @@ stories:
     user: |
       How to bake?
   - action: action_how_to
+
+- story: Ask for tools at a specific step
+  steps:
+  - intent: ask_tools_at_step
+    entities:
+      - step_type: current
+    user: |
+      What tools do I need for the current step?
+  - action: action_tools_at_step
+
+- story: Ask for methods at a specific step
+  steps:
+  - intent: ask_methods_at_step
+    entities:
+      - step_type: next
+    user: |
+      What methods are used in the next step?
+  - action: action_methods_at_step
+
+- story: Ask for ingredients at a specific step
+  steps:
+  - intent: ask_ingredients_at_step
+    entities:
+      - step_type: previous
+    user: |
+      What ingredients do I need for the previous step?
+  - action: action_ingredients_at_step
+
