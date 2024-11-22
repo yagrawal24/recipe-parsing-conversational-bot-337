@@ -1,6 +1,6 @@
 name: recipe
 channels:
-  - defaults
+    - defaults
 dependencies:
   - python=3.10
   - spacy
