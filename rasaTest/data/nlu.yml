@@ -58,11 +58,43 @@ nlu:
     - Tell me the methods of cooking
     - What are the techniques used?
 
+- intent: ask_current_step
+  examples: |
+    - What is the current step?
+    - Tell me the current step.
+    - What's the step I'm on?
+
+- intent: ask_next_step
+  examples: |
+    - What is the next step?
+    - Tell me the next step.
+    - What's after this step?
+
+- intent: ask_previous_step
+  examples: |
+    - What is the previous step?
+    - Tell me the previous step.
+    - What's the step before this one?
+
 - intent: how_to
   examples: |
-    - How to bake a cake?
-    - How to boil water?
-    - How do I mix the ingredients?
+    - How to mince onions?
+    - How to bake cookies?What 
+    - How do I stir fry vegetables?
+    - How do I chop carrots?
+    - Can you show me how to boil water?
+    - How to fry an egg?
+    - Explain how to knead dough.
+    - Tell me how to caramelize onions.
+    - What are the steps for making pasta?
+
+- intent: ask_full_recipe
+  examples: |
+    - Show me the full recipe.
+    - I want the complete recipe.
+    - Can you show all the ingredients and steps?
+    - Give me the recipe in full.
+    - Print the entire recipe.
 
 - intent: what_is
   examples: |
@@ -76,3 +108,21 @@ nlu:
     - are you a human?
     - am I talking to a bot?
     - am I talking to a human?
+
+- intent: ask_tools_at_step
+  examples: |
+    - What tools are needed for the current step?
+    - What tools do I need for the next step?
+    - Tools for the previous step?
+
+- intent: ask_methods_at_step
+  examples: |
+    - What methods are used for the current step?
+    - Cooking methods for the next step?
+    - Tell me the methods for the previous step.
+
+- intent: ask_ingredients_at_step
+  examples: |
+    - What ingredients are needed for the current step?
+    - Ingredients for the next step?
+    - What do I need for the previous step?

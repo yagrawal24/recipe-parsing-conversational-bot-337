@@ -10,8 +10,26 @@ intents:
   - bot_challenge
   - how_to
   - ask_cooking_methods
+  - ask_current_step
+  - ask_next_step
+  - ask_previous_step
   - what_is
   - ask_tools
+  - ask_full_recipe
+  - ask_tools_at_step
+  - ask_methods_at_step
+  - ask_ingredients_at_step
+
+entities:
+  - step_type
+
+slots:
+  step_type:
+    type: text
+    influence_conversation: true
+    mappings:
+      - type: from_entity
+        entity: step_type
 
 responses:
   utter_greet:
@@ -29,8 +47,32 @@ responses:
   utter_no_recipe:
     - text: "I don't have a recipe yet. Please provide a recipe URL first."
 
+  utter_last_step:
+    - text: "You are at the last step of the recipe."
+
+  utter_first_step:
+    - text: "You are already at the first step of the recipe."
+
   utter_unknown_term:
     - text: "I couldn't find that in the recipe. Here's a resource that might help: {resource_link}"
+
+  utter_full_recipe:
+    - text: "Here is the full recipe. Let me list everything for you."
+
+  utter_ask_tools_at_step:
+    - text: "Which step type do you want the tools for? (current, next, or previous)"
+
+  utter_ask_methods_at_step:
+    - text: "Which step type do you want the methods for? (current, next, or previous)"
+
+  utter_ask_ingredients_at_step:
+    - text: "Which step type do you want the ingredients for? (current, next, or previous)"
+
+  utter_ask_step_type:
+    - text: "For which step? (current, next, or previous)"
+
+  utter_no_recipe_loaded:
+    - text: "I don't have a recipe loaded. Please provide a recipe URL first."
 
   utter_iamabot:
     - text: "I am a bot, powered by Rasa."
@@ -40,8 +82,15 @@ actions:
   - action_list_ingredients
   - action_list_tools
   - action_list_cooking_methods
+  - action_current_step
+  - action_next_step
+  - action_previous_step
   - action_what_is
   - action_how_to
+  - action_print_full_recipe
+  - action_tools_at_step
+  - action_methods_at_step
+  - action_ingredients_at_step
 
 session_config:
   session_expiration_time: 60

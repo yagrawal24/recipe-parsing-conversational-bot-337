@@ -38,6 +38,41 @@ rules:
   - intent: ask_cooking_methods
   - action: action_list_cooking_methods
 
+- rule: Respond to full recipe request
+  steps:
+  - intent: ask_full_recipe
+  - action: action_print_full_recipe
+
+- rule: Respond to tools query for a step
+  steps:
+  - intent: ask_tools_at_step
+  - action: action_tools_at_step
+
+- rule: Respond to methods query for a step
+  steps:
+  - intent: ask_methods_at_step
+  - action: action_methods_at_step
+
+- rule: Respond to ingredients query for a step
+  steps:
+  - intent: ask_ingredients_at_step
+  - action: action_ingredients_at_step
+
+- rule: Ask for current step
+  steps:
+  - intent: ask_current_step
+  - action: action_current_step
+
+- rule: Ask for next step
+  steps:
+  - intent: ask_next_step
+  - action: action_next_step
+
+- rule: Ask for previous step
+  steps:
+  - intent: ask_previous_step
+  - action: action_previous_step
+
 - rule: Respond to "how to"
   steps:
   - intent: how_to
