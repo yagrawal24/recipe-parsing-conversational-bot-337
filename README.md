@@ -25,3 +25,7 @@
     - I want to know the ingredients.
     - What tools do I need?
     - List the tools for this recipe.
+    - What are the cooking methods?
+    - List the cooking methods
+    - Tell me the methods of cooking
+    - What are the techniques used?
