@@ -16,10 +16,6 @@ def fetch_page_from_url(url):
     try:
         response = requests.get(url)
         response.raise_for_status()
-
-        # old, worked for simple recipes (1 ingredients list) but not more complex ones (2+ ingredient lists)
-        # soup = BeautifulSoup(response.content, 'html.parser')
-        # title_element = soup.find("h1", class_="headline")
         
         soup = BeautifulSoup(response.content, 'html5lib')
         
@@ -32,16 +28,6 @@ def fetch_page_from_url(url):
             url_title = parsed_url.path.split('/')[-2]
             title = inflection.titleize(url_title.replace('-', ' '))
 
-        # old
-        # details = [item.text.strip() for item in soup.find_all("script", class_="comp allrecipes-schema mntl-schema-unified")]
-        # details_json = json.loads(details[0])
-        # ingredients = details_json[0]['recipeIngredient']
-        # instructions = details_json[0]['recipeInstructions']
-
-        # recipe_data = f"Title: {title}\n\nIngredients:\n" + "\n".join(ingredients) + "\n\nInstructions:\n" + "\n".join([i['text'] for i in instructions])
-        
-        
-        # collect ingredients from html
         ingredients_raw = [i.find_all('span') for i in soup.find_all("li", class_="mm-recipes-structured-ingredients__list-item")]
 
         ingredients = []
@@ -53,13 +39,7 @@ def fetch_page_from_url(url):
                 curr_dict.update({key:j.string})
             ingredients.append(curr_dict)
             
-        # collect instructions from HTML
-        instructions = [s.text.replace("\n", "") for s in soup.find_all("p", class_="comp mntl-sc-block mntl-sc-block-html")]
-                
-        recipe_data = f"Title: {title}\n\nIngredients:\n" + "\n".join(print_ingredients_list(ingredients)) + "\n\nInstructions:\n" + "\n".join(instructions)
-
-        with open("recipe_data.txt", "w") as file:
-            file.write(recipe_data)
+        instructions = extract_instructions(soup)
 
         return ingredients, instructions
 
@@ -94,7 +74,7 @@ def extract_tools(instructions):
     return list(tools_set)
 
 def extract_cooking_methods(instructions):
-    nlp = spacy.load("en_core_web_sm")
+    # nlp = spacy.load("en_core_web_sm")
     cooking_methods = set()
     
     for instruction in instructions:
@@ -109,6 +89,23 @@ def extract_cooking_methods(instructions):
                     cooking_methods.add(token.text.capitalize())
     
     return sorted(list(cooking_methods))
+
+def extract_instructions(soup):
+    header = soup.find('h2', string="Directions")
+
+    if header:
+        recipe_steps = []
+
+        for sibling in header.find_all_next():
+            if sibling.name == "h2":
+                break
+
+            if sibling.name == "p" and "compmntl-sc-blockmntl-sc-block-html" in ''.join(sibling.get("class", [])):
+                recipe_steps.append(sibling.get_text(strip=True))
+
+        return recipe_steps
+    else:
+        print("No directions found!")
 
 if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
