@@ -8,6 +8,7 @@ intents:
   - provide_url
   - ask_ingredients
   - bot_challenge
+  - ask_tools
 
 responses:
   utter_greet:
@@ -28,6 +29,7 @@ responses:
 actions:
   - action_fetch_recipe
   - action_list_ingredients
+  - action_list_tools
 
 session_config:
   session_expiration_time: 60

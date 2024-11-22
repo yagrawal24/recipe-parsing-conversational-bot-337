@@ -29,7 +29,7 @@
 from typing import Dict, Text, Any, List
 from rasa_sdk import Tracker, Action
 from rasa_sdk.executor import CollectingDispatcher
-from .url import fetch_page_from_url, print_ingredients_list
+from .url import fetch_page_from_url, print_ingredients_list, extract_tools
 
 # Global dictionary to store recipe data
 RECIPE_CACHE = {}
@@ -94,7 +94,33 @@ class ActionListIngredients(Action):
 
         # Retrieve and respond with the cached ingredients
         formatted_ingredients = RECIPE_CACHE["latest"]["ingredients"]
-        ingredients_text = "\n".join(formatted_ingredients)  # Assign the joined string to a variable
+        ingredients_text = "\n".join(formatted_ingredients)
         dispatcher.utter_message(text=f"The ingredients are:\n{ingredients_text}")
 
         return []
+
+
+class ActionListTools(Action):
+    def name(self) -> Text:
+        return "action_list_tools"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        # Check if there is a cached recipe
+        if "latest" not in RECIPE_CACHE or "instructions" not in RECIPE_CACHE["latest"]:
+            dispatcher.utter_message(text="I don't have the instructions yet. Please provide a recipe URL first.")
+            return []
+
+        # Retrieve instructions and extract tools
+        instructions = RECIPE_CACHE["latest"]["instructions"]
+        tools = extract_tools(instructions)
+
+        if not tools:
+            dispatcher.utter_message(text="I couldn't find any tools in the recipe instructions.")
+        else:
+            tools_text = ", ".join(tools)
+            dispatcher.utter_message(text=f"The tools needed are:\n{tools_text}")
+
+        return []
+

@@ -17,3 +17,10 @@ stories:
   - action: action_fetch_recipe
   - intent: ask_ingredients
   - action: action_list_ingredients
+
+- story: Ask for tools after providing URL
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
+  - intent: ask_tools
+  - action: action_list_tools

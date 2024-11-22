@@ -45,6 +45,12 @@ nlu:
     - Ingredients please.
     - I want to know the ingredients.
 
+- intent: ask_tools
+  examples: |
+    - What tools do I need?
+    - List the tools for this recipe.
+    - Do I need a pan or a whisk?
+
 - intent: bot_challenge
   examples: |
     - are you a bot?

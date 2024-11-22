@@ -68,18 +68,13 @@ def fetch_page_from_url(url):
 
 # put ingredients and instructions in a .txt file for human readability
 def print_ingredients_list(ingredients_list):
-    if not isinstance(ingredients_list, list):
-        raise ValueError("Expected a list of dictionaries for ingredients.")
-
     ingredients_print = []
     for i in ingredients_list:
-        if not isinstance(i, dict):
-            raise ValueError("Each ingredient must be a dictionary.")
         s = ""
         for j in i:
-            if i[j] is not None:
+            if i[j] != None:
                 s += i[j] + " "
-        ingredients_print.append(s.strip())
+        ingredients_print.append(s)
     return ingredients_print
 
 def extract_tools(instructions):

@@ -23,6 +23,11 @@ rules:
   - intent: provide_url
   - action: action_fetch_recipe
 
+- rule: Respond with tools
+  steps:
+  - intent: ask_tools
+  - action: action_list_tools
+
 - rule: Respond with ingredients
   steps:
   - intent: ask_ingredients

@@ -1,20 +1,38 @@
 version: "3.1"
 
 stories:
-- story: Test greet and ask for URL
-  steps:
-  - intent: greet
-  - action: utter_greet
-  - action: utter_ask_url
-
-- story: Test invalid URL
+- story: Test fetch recipe
   steps:
   - intent: provide_url
+    user: |
+      https://www.allrecipes.com/recipe/26482/candied-yams/
   - action: action_fetch_recipe
 
-- story: Test provide URL and ask for ingredients
+- story: Test respond to invalid URL
   steps:
   - intent: provide_url
+    user: |
+      https://invalid.url/
+  - action: action_fetch_recipe
+
+- story: Test fetch ingredients after valid URL
+  steps:
+  - intent: provide_url
+    user: |
+      https://www.allrecipes.com/recipe/26482/candied-yams/
   - action: action_fetch_recipe
   - intent: ask_ingredients
+    user: |
+      What are the ingredients?
   - action: action_list_ingredients
+
+- story: Test fetch tools after valid URL
+  steps:
+  - intent: provide_url
+    user: |
+      https://www.allrecipes.com/recipe/26482/candied-yams/
+  - action: action_fetch_recipe
+  - intent: ask_tools
+    user: |
+      What tools do I need?
+  - action: action_list_tools
