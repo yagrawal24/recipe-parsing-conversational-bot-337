@@ -38,7 +38,7 @@ import requests
 RECIPE_CACHE = {}
 SEARCH_CACHE = {}
 
-# Action for fetching a recipe
+
 class ActionFetchRecipe(Action):
     def name(self) -> Text:
         return "action_fetch_recipe"
@@ -48,12 +48,10 @@ class ActionFetchRecipe(Action):
     ) -> List[Dict[Text, Any]]:
         user_message = tracker.latest_message.get("text")
 
-        # Validate the URL
         if "https://www.allrecipes.com/" not in user_message:
             dispatcher.utter_message(text="That doesn't look like a valid AllRecipes.com URL. Please try again.")
             return []
 
-        # Fetch recipe data
         try:
             ingredients, instructions = fetch_page_from_url(user_message)
         except Exception as e:
@@ -64,18 +62,16 @@ class ActionFetchRecipe(Action):
             dispatcher.utter_message(text="I couldn't retrieve the instructions. Please check the URL and try again.")
             return []
 
-        # Save recipe and reset step tracker
         RECIPE_CACHE["latest"] = {
             "url": user_message,
             "ingredients": print_ingredients_list(ingredients),
             "instructions": instructions,
-            "current_step": 0,  # Start at the first step
+            "current_step": 0,
         }
 
         dispatcher.utter_message(text="The recipe has been loaded. You can now ask for steps like 'next step', 'current step', or 'previous step'.")
         return []
 
-# Action for listing ingredients
 class ActionListIngredients(Action):
     def name(self) -> Text:
         return "action_list_ingredients"
@@ -92,7 +88,6 @@ class ActionListIngredients(Action):
 
         return []
 
-# Action for listing tools
 class ActionListTools(Action):
     def name(self) -> Text:
         return "action_list_tools"
@@ -112,7 +107,6 @@ class ActionListTools(Action):
 
         return []
 
-# Action for listing cooking methods
 class ActionListCookingMethods(Action):
     def name(self) -> Text:
         return "action_list_cooking_methods"
@@ -154,7 +148,6 @@ class ActionPrintFullRecipe(Action):
 
         return []
 
-# Action for handling "how to" questions
 class ActionHowTo(Action):
     def name(self) -> Text:
         return "action_how_to"
@@ -183,7 +176,6 @@ class ActionHowTo(Action):
         dispatcher.utter_message(text=response)
         return []
 
-# Action for handling "what is" questions
 class ActionWhatIs(Action):
     def name(self) -> Text:
         return "action_what_is"
@@ -212,7 +204,6 @@ class ActionWhatIs(Action):
         dispatcher.utter_message(text=response)
         return []
 
-# Action for showing the current step
 class ActionCurrentStep(Action):
     def name(self) -> Text:
         return "action_current_step"
@@ -233,7 +224,6 @@ class ActionCurrentStep(Action):
 
         return []
 
-# Action for showing the next step
 class ActionNextStep(Action):
     def name(self) -> Text:
         return "action_next_step"
@@ -256,7 +246,6 @@ class ActionNextStep(Action):
 
         return []
 
-# Action for showing the previous step
 class ActionPreviousStep(Action):
     def name(self) -> Text:
         return "action_previous_step"
@@ -288,7 +277,6 @@ def get_step_index(step_type: str, current_step: int, total_steps: int) -> int:
         return current_step - 1 if current_step > 0 else current_step
     return current_step
 
-# Action for tools at a specific step
 class ActionToolsAtStep(Action):
     def name(self) -> Text:
         return "action_tools_at_step"
@@ -313,7 +301,6 @@ class ActionToolsAtStep(Action):
             dispatcher.utter_message(text=f"No tools are required for the step.")
         return []
 
-# Action for methods at a specific step
 class ActionMethodsAtStep(Action):
     def name(self) -> Text:
         return "action_methods_at_step"
@@ -355,7 +342,6 @@ class ActionIngredientsAtStep(Action):
         total_steps = len(recipe["instructions"])
         step_index = get_step_index(step_type, current_step, total_steps)
 
-        # Ensure valid step index
         if step_index >= len(recipe["instructions"]):
             dispatcher.utter_message(
                 text=f"Invalid step type '{step_type}' or no instructions available for the specified step."
@@ -364,21 +350,17 @@ class ActionIngredientsAtStep(Action):
 
         step_text = recipe["instructions"][step_index].lower()
 
-        # Check ingredients data structure
         if not isinstance(recipe["ingredients"], list):
             dispatcher.utter_message(text="Ingredients data is not properly structured.")
             return []
 
-        # Extract ingredients mentioned in the step
         mentioned_ingredients = []
         for ingredient in recipe["ingredients"]:
             if isinstance(ingredient, dict):
-                # Combine all dictionary values into a single string for cross-referencing
                 ingredient_text = " ".join(value for value in ingredient.values() if value).lower()
             else:
                 ingredient_text = str(ingredient).lower()
 
-            # Cross-reference with the step text, excluding tools
             if any(word in step_text for word in ingredient_text.split()):
                 mentioned_ingredients.append(ingredient_text)
 
