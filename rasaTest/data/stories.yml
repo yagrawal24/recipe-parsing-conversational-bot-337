@@ -25,6 +25,13 @@ stories:
   - intent: ask_tools
   - action: action_list_tools
 
+- story: Fetch recipe and list cooking methods
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
+  - intent: ask_cooking_methods
+  - action: action_list_cooking_methods
+
 - story: Ask what is
   steps:
   - intent: what_is

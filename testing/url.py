@@ -93,6 +93,22 @@ def extract_tools(instructions):
                     tools_set.add(chunk_text)
     return list(tools_set)
 
+def extract_cooking_methods(instructions):
+    nlp = spacy.load("en_core_web_sm")
+    cooking_methods = set()
+    
+    for instruction in instructions:
+        doc = nlp(instruction.lower().strip())
+        
+        for i, token in enumerate(doc):
+            if token.pos_ == "VERB":
+                is_start = i == 0 or doc[i-1].text in {"then", "and", ",", ";"}
+                has_object = any(child.dep_ in {"dobj", "pobj"} for child in token.children)
+                
+                if is_start or has_object:
+                    cooking_methods.add(token.text.capitalize())
+    
+    return sorted(list(cooking_methods))
 
 if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"

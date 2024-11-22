@@ -33,6 +33,11 @@ rules:
   - intent: ask_ingredients
   - action: action_list_ingredients
 
+- rule: Respond to cooking methods
+  steps:
+  - intent: ask_cooking_methods
+  - action: action_list_cooking_methods
+
 - rule: Respond to "how to"
   steps:
   - intent: how_to

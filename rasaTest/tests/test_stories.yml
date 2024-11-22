@@ -1,57 +1,53 @@
 version: "3.1"
-
 stories:
-- story: Test greet and ask for URL
-  steps:
-  - intent: greet
-  - action: utter_greet
-
-- story: Test provide valid URL
+- story: Provide valid URL and fetch recipe
   steps:
   - intent: provide_url
     user: |
-      Here is the recipe link: https://www.allrecipes.com/recipe/26482/candied-yams/
+      https://www.allrecipes.com/recipe/26482/candied-yams/
   - action: action_fetch_recipe
 
-- story: Test invalid URL
+- story: Ask for ingredients after providing URL
   steps:
   - intent: provide_url
     user: |
-      invalid link
-  - action: action_fetch_recipe
-
-- story: Test asking ingredients after URL
-  steps:
-  - intent: provide_url
-    user: |
-      https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
+      https://www.allrecipes.com/recipe/26482/candied-yams/
   - action: action_fetch_recipe
   - intent: ask_ingredients
     user: |
       What are the ingredients?
   - action: action_list_ingredients
 
-- story: Test asking tools after URL
+- story: Ask for tools after providing URL
   steps:
   - intent: provide_url
     user: |
-      https://www.allrecipes.com/recipe/213476/chicken-parmesan/
+      https://www.allrecipes.com/recipe/26482/candied-yams/
   - action: action_fetch_recipe
   - intent: ask_tools
     user: |
       What tools do I need?
   - action: action_list_tools
 
-- story: Test "how to" question
+- story: Test list cooking methods
+  steps:
+  - intent: provide_url
+    user: |
+      https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
+  - action: action_fetch_recipe
+  - intent: ask_cooking_methods
+  - action: action_list_cooking_methods
+
+- story: Ask "How to" question
   steps:
   - intent: how_to
     user: |
-      How to bake a cake?
+      How to mince onions?
   - action: action_how_to
 
-- story: Test "what is" question
+- story: Ask "What is" question
   steps:
   - intent: what_is
     user: |
-      What is sugar?
+      What is a skillet?
   - action: action_what_is

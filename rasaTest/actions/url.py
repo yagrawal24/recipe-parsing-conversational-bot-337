@@ -94,7 +94,7 @@ def extract_tools(instructions):
     return list(tools_set)
 
 def extract_cooking_methods(instructions):
-    nlp = spacy.load("en_core_web_sm")
+    # nlp = spacy.load("en_core_web_sm")
     cooking_methods = set()
     
     for instruction in instructions:

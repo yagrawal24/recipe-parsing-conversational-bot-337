@@ -31,7 +31,7 @@ from rasa_sdk import Tracker, Action
 from rasa_sdk.executor import CollectingDispatcher
 from googlesearch import search
 import urllib.parse
-from .url import fetch_page_from_url, print_ingredients_list, extract_tools
+from .url import fetch_page_from_url, print_ingredients_list, extract_tools, extract_cooking_methods
 
 # Global dictionary to store recipe data
 RECIPE_CACHE = {}
@@ -125,6 +125,31 @@ class ActionListTools(Action):
             dispatcher.utter_message(text=f"The tools needed are:\n{tools_text}")
 
         return []
+    
+class ActionListCookingMethods(Action):
+    def name(self) -> Text:
+        return "action_list_cooking_methods"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        # Check if there is a cached recipe
+        if "latest" not in RECIPE_CACHE or "instructions" not in RECIPE_CACHE["latest"]:
+            dispatcher.utter_message(text="I don't have the instructions yet. Please provide a recipe URL first.")
+            return []
+
+        # Retrieve instructions and extract cooking methods
+        instructions = RECIPE_CACHE["latest"]["instructions"]
+        methods = extract_cooking_methods(instructions)
+
+        if not methods:
+            dispatcher.utter_message(text="I couldn't find any cooking methods in the recipe.")
+        else:
+            methods_text = ", ".join(methods)
+            dispatcher.utter_message(text=f"The cooking methods are:\n{methods_text}")
+
+        return []
+    
 class ActionHowTo(Action):
     def name(self) -> Text:
         return "action_how_to"

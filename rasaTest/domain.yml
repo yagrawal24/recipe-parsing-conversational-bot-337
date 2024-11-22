@@ -9,6 +9,7 @@ intents:
   - ask_ingredients
   - bot_challenge
   - how_to
+  - ask_cooking_methods
   - what_is
   - ask_tools
 
@@ -38,6 +39,7 @@ actions:
   - action_fetch_recipe
   - action_list_ingredients
   - action_list_tools
+  - action_list_cooking_methods
   - action_what_is
   - action_how_to
 

@@ -51,6 +51,13 @@ nlu:
     - List the tools for this recipe.
     - Do I need a pan or a whisk?
 
+- intent: ask_cooking_methods
+  examples: |
+    - What are the cooking methods?
+    - List the cooking methods
+    - Tell me the methods of cooking
+    - What are the techniques used?
+
 - intent: how_to
   examples: |
     - How to bake a cake?
