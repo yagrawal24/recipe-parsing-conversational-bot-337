@@ -24,6 +24,3 @@ dependencies:
       - google
       - rasa
       - rasa-sdk
-  - python
-  - pip:
-      - "python -m spacy download en_core_web_md"

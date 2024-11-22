@@ -1,11 +1,17 @@
-# Rasa Instructions
 
-## You will need to keep 3 terminals open to avoid errors that different systems experience
+### Downloads:
+- "python -m spacy download en_core_web_md"
+- "conda env create -f environment.yml"
+- "conda activate recipe"
+
+### Rasa Instructions:
+
+#### You will need to keep 3 terminals open to avoid errors that different systems experience
  1. First Terminal: rasa train
  2. Second Terminal: rasa run actions
  3. Third Terminal: rasa shell
 
-## Inside of "rasa shell"
+#### Inside of "rasa shell"
 - Say "Hello"
 - Copy and paste recipes
 - Ask how to and what questions
