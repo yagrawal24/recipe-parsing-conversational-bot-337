@@ -51,6 +51,18 @@ nlu:
     - List the tools for this recipe.
     - Do I need a pan or a whisk?
 
+- intent: how_to
+  examples: |
+    - How to bake a cake?
+    - How to boil water?
+    - How do I mix the ingredients?
+
+- intent: what_is
+  examples: |
+    - What is sugar?
+    - What is a whisk?
+    - Can you explain marshmallows?
+
 - intent: bot_challenge
   examples: |
     - are you a bot?

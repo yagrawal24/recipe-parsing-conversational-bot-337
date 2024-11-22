@@ -33,6 +33,16 @@ rules:
   - intent: ask_ingredients
   - action: action_list_ingredients
 
+- rule: Respond to "how to"
+  steps:
+  - intent: how_to
+  - action: action_how_to
+
+- rule: Respond to "what is"
+  steps:
+  - intent: what_is
+  - action: action_what_is
+
 - rule: Say 'I am a bot'
   steps:
   - intent: bot_challenge

@@ -8,6 +8,8 @@ intents:
   - provide_url
   - ask_ingredients
   - bot_challenge
+  - how_to
+  - what_is
   - ask_tools
 
 responses:
@@ -23,6 +25,12 @@ responses:
   utter_invalid_url:
     - text: "That doesn't look like a valid AllRecipes.com URL. Please try again."
 
+  utter_no_recipe:
+    - text: "I don't have a recipe yet. Please provide a recipe URL first."
+
+  utter_unknown_term:
+    - text: "I couldn't find that in the recipe. Here's a resource that might help: {resource_link}"
+
   utter_iamabot:
     - text: "I am a bot, powered by Rasa."
 
@@ -30,6 +38,8 @@ actions:
   - action_fetch_recipe
   - action_list_ingredients
   - action_list_tools
+  - action_what_is
+  - action_how_to
 
 session_config:
   session_expiration_time: 60

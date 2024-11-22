@@ -24,3 +24,17 @@ stories:
   - action: action_fetch_recipe
   - intent: ask_tools
   - action: action_list_tools
+
+- story: Ask what is
+  steps:
+  - intent: what_is
+    user: |
+      What is sugar?
+  - action: action_what_is
+
+- story: Ask how to
+  steps:
+  - intent: how_to
+    user: |
+      How to bake?
+  - action: action_how_to

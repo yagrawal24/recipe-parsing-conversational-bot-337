@@ -1,38 +1,57 @@
 version: "3.1"
 
 stories:
-- story: Test fetch recipe
+- story: Test greet and ask for URL
+  steps:
+  - intent: greet
+  - action: utter_greet
+
+- story: Test provide valid URL
   steps:
   - intent: provide_url
     user: |
-      https://www.allrecipes.com/recipe/26482/candied-yams/
+      Here is the recipe link: https://www.allrecipes.com/recipe/26482/candied-yams/
   - action: action_fetch_recipe
 
-- story: Test respond to invalid URL
+- story: Test invalid URL
   steps:
   - intent: provide_url
     user: |
-      https://invalid.url/
+      invalid link
   - action: action_fetch_recipe
 
-- story: Test fetch ingredients after valid URL
+- story: Test asking ingredients after URL
   steps:
   - intent: provide_url
     user: |
-      https://www.allrecipes.com/recipe/26482/candied-yams/
+      https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
   - action: action_fetch_recipe
   - intent: ask_ingredients
     user: |
       What are the ingredients?
   - action: action_list_ingredients
 
-- story: Test fetch tools after valid URL
+- story: Test asking tools after URL
   steps:
   - intent: provide_url
     user: |
-      https://www.allrecipes.com/recipe/26482/candied-yams/
+      https://www.allrecipes.com/recipe/213476/chicken-parmesan/
   - action: action_fetch_recipe
   - intent: ask_tools
     user: |
       What tools do I need?
   - action: action_list_tools
+
+- story: Test "how to" question
+  steps:
+  - intent: how_to
+    user: |
+      How to bake a cake?
+  - action: action_how_to
+
+- story: Test "what is" question
+  steps:
+  - intent: what_is
+    user: |
+      What is sugar?
+  - action: action_what_is
