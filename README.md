@@ -8,7 +8,7 @@
 
 #### You will need to keep two terminals open to avoid errors that different systems experience
  1. rasa validate
- 2. rasa train (only if /models folder is empty)
+ 2. rasa train
  3. rasa test
  4. First Terminal: rasa run actions
  5. Second Terminal: rasa shell
