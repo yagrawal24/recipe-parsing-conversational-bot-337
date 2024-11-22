@@ -7,7 +7,7 @@
 ### Rasa Instructions:
 
 #### You will need to keep 3 terminals open to avoid errors that different systems experience
- 1. First Terminal: rasa train (may need to delete models in the /models)
+ 1. First Terminal: rasa train (only if /models folder is empty)
  2. Second Terminal: rasa run actions
  3. Third Terminal: rasa shell
 
