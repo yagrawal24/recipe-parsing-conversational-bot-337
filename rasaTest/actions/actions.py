@@ -125,6 +125,39 @@ class ActionListTools(Action):
             dispatcher.utter_message(text=f"The tools needed are:\n{tools_text}")
 
         return []
+class ActionHowTo(Action):
+    def name(self) -> Text:
+        return "action_how_to"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        user_message = tracker.latest_message.get("text")
+
+        # Extract query from the user's message
+        query = user_message.replace("How to", "").strip("?").strip()
+        if not query:
+            dispatcher.utter_message(text="Could you clarify what you need help with?")
+            return []
+
+        # Search for YouTube and Google resources
+        youtube_query = f"https://www.youtube.com/results?search_query=How+to+{urllib.parse.quote(query)}"
+        try:
+            google_results = [result for result in search(f"How to {query}", stop=3)]
+        except Exception as e:
+            dispatcher.utter_message(text=f"An error occurred while searching: {str(e)}")
+            return []
+
+        # Construct the response
+        response = f"No worries! Here's a YouTube video that might help: {youtube_query}\n"
+        if google_results:
+            response += "\nHere are other resources I found:\n"
+            for link in google_results:
+                response += f"- {link}\n"
+
+        dispatcher.utter_message(text=response)
+        return []
+
 
 class ActionWhatIs(Action):
     def name(self) -> Text:
@@ -135,14 +168,13 @@ class ActionWhatIs(Action):
     ) -> List[Dict[Text, Any]]:
         user_message = tracker.latest_message.get("text")
 
-        # Extract the keyword
-        keyword = user_message.replace("What is ", "").strip("?").lower()
-
+        # Extract keyword from the user's message
+        keyword = user_message.replace("What is", "").strip("?").strip().lower()
         if not keyword:
-            dispatcher.utter_message(text="I didn't understand what you're asking about. Could you clarify?")
+            dispatcher.utter_message(text="Could you clarify what you're asking about?")
             return []
 
-        # Check cached ingredients
+        # Check if the keyword matches an ingredient in the cached recipe
         if "latest" in RECIPE_CACHE and "ingredients" in RECIPE_CACHE["latest"]:
             ingredients = RECIPE_CACHE["latest"]["ingredients"]
             for ingredient in ingredients:
@@ -150,37 +182,20 @@ class ActionWhatIs(Action):
                     dispatcher.utter_message(text=f"{keyword.capitalize()} is one of the ingredients in the recipe.")
                     return []
 
-        # Perform a Google search if the term is not found in the recipe
+        # Search for YouTube and Google resources
+        youtube_query = f"https://www.youtube.com/results?search_query=What+is+{urllib.parse.quote(keyword)}"
         try:
-            search_results = [
-                result for result in search(f"What is {keyword}?", stop=1)
-            ]
-            if search_results:
-                dispatcher.utter_message(text=f"I couldn't find {keyword} in the recipe. Here's a resource that might help: {search_results[0]}")
-            else:
-                dispatcher.utter_message(text=f"Sorry, I couldn't find any information on {keyword}.")
+            google_results = [result for result in search(f"What is {keyword}", stop=3)]
         except Exception as e:
             dispatcher.utter_message(text=f"An error occurred while searching: {str(e)}")
+            return []
 
-        return []
+        # Construct the response
+        response = f"No worries! Here's a YouTube video that might help: {youtube_query}\n"
+        if google_results:
+            response += "\nHere are other resources I found:\n"
+            for link in google_results:
+                response += f"- {link}\n"
 
-
-class ActionHowTo(Action):
-    def name(self) -> Text:
-        return "action_how_to"
-
-    def run(
-        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-    ) -> List[Dict[Text, Any]]:
-        user_message = tracker.latest_message.get("text")
-
-        # Extract the query
-        query = user_message.replace("How to ", "").strip("?").lower()
-
-        # Generate a YouTube search link
-        base_url = "https://www.youtube.com/results?search_query="
-        encoded_query = urllib.parse.quote(f"How to {query}")
-        final_url = f"{base_url}{encoded_query}"
-
-        dispatcher.utter_message(text=f"No worries! Here's a resource that might help: {final_url}")
+        dispatcher.utter_message(text=response)
         return []
