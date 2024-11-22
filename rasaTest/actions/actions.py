@@ -288,113 +288,7 @@ def get_step_index(step_type: str, current_step: int, total_steps: int) -> int:
         return current_step - 1 if current_step > 0 else current_step
     return current_step
 
-# # Action for tools at a specific step
-# class ActionToolsAtStep(Action):
-#     def name(self) -> Text:
-#         return "action_tools_at_step"
-
-#     def run(
-#         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-#     ) -> List[Dict[Text, Any]]:
-#         step_type = tracker.get_slot("step_type")
-#         if "latest" not in RECIPE_CACHE:
-#             dispatcher.utter_message(text="I don't have a recipe loaded. Please provide a recipe URL first.")
-#             return []
-
-#         recipe = RECIPE_CACHE["latest"]
-#         current_step = recipe["current_step"]
-#         total_steps = len(recipe["instructions"])
-#         step_index = get_step_index(step_type, current_step, total_steps)
-
-#         tools = extract_tools([recipe["instructions"][step_index]])
-#         if tools:
-#             dispatcher.utter_message(text=f"Tools for {step_type} step:\n{', '.join(tools)}")
-#         else:
-#             dispatcher.utter_message(text=f"No tools are required for the {step_type} step.")
-#         return []
-
-# # Action for methods at a specific step
-# class ActionMethodsAtStep(Action):
-#     def name(self) -> Text:
-#         return "action_methods_at_step"
-
-#     def run(
-#         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-#     ) -> List[Dict[Text, Any]]:
-#         step_type = tracker.get_slot("step_type")
-#         if "latest" not in RECIPE_CACHE:
-#             dispatcher.utter_message(text="I don't have a recipe loaded. Please provide a recipe URL first.")
-#             return []
-
-#         recipe = RECIPE_CACHE["latest"]
-#         current_step = recipe["current_step"]
-#         total_steps = len(recipe["instructions"])
-#         step_index = get_step_index(step_type, current_step, total_steps)
-
-#         methods = extract_cooking_methods([recipe["instructions"][step_index]])
-#         if methods:
-#             dispatcher.utter_message(text=f"Methods for {step_type} step:\n{', '.join(methods)}")
-#         else:
-#             dispatcher.utter_message(text=f"No methods are mentioned for the {step_type} step.")
-#         return []
-
-# # Action for ingredients at a specific step
-# class ActionIngredientsAtStep(Action):
-#     def name(self) -> Text:
-#         return "action_ingredients_at_step"
-
-#     def run(
-#         self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-#     ) -> List[Dict[Text, Any]]:
-#         step_type = tracker.get_slot("step_type")
-#         if "latest" not in RECIPE_CACHE:
-#             dispatcher.utter_message(text="I don't have a recipe loaded. Please provide a recipe URL first.")
-#             return []
-
-#         recipe = RECIPE_CACHE["latest"]
-#         current_step = recipe["current_step"]
-#         total_steps = len(recipe["instructions"])
-#         step_index = get_step_index(step_type, current_step, total_steps)
-
-#         step_text = recipe["instructions"][step_index]
-#         ingredients = extract_tools([step_text])  # Replace this with the actual ingredient extraction logic
-#         if ingredients:
-#             dispatcher.utter_message(text=f"Ingredients for {step_type} step:\n{', '.join(ingredients)}")
-#         else:
-#             dispatcher.utter_message(text=f"No ingredients are mentioned for the {step_type} step.")
-#         return []
-
-class ActionIngredientsAtStep(Action):
-    def name(self) -> Text:
-        return "action_ingredients_at_step"
-
-    def run(
-        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
-    ) -> List[Dict[Text, Any]]:
-        step_type = tracker.get_slot("step_type")
-        if "latest" not in RECIPE_CACHE:
-            dispatcher.utter_message(text="I don't have a recipe loaded. Please provide a recipe URL first.")
-            return []
-
-        recipe = RECIPE_CACHE["latest"]
-        current_step = recipe["current_step"]
-        total_steps = len(recipe["instructions"])
-        step_index = get_step_index(step_type, current_step, total_steps)
-
-        step_text = recipe["instructions"][step_index]
-        # Example logic for extracting ingredients from a step's text
-        ingredients = [
-            ingredient for ingredient in recipe["ingredients"] if ingredient.lower() in step_text.lower()
-        ]
-
-        if ingredients:
-            dispatcher.utter_message(
-                text=f"Ingredients:\n{', '.join(ingredients)}"
-            )
-        else:
-            dispatcher.utter_message(text=f"No ingredients are mentioned for this step.")
-        return []
-
+# Action for tools at a specific step
 class ActionToolsAtStep(Action):
     def name(self) -> Text:
         return "action_tools_at_step"
@@ -413,15 +307,13 @@ class ActionToolsAtStep(Action):
         step_index = get_step_index(step_type, current_step, total_steps)
 
         tools = extract_tools([recipe["instructions"][step_index]])
-
         if tools:
-            dispatcher.utter_message(
-                text=f"Tools:\n{', '.join(tools)}"
-            )
+            dispatcher.utter_message(text=f"Tools:\n{', '.join(tools)}")
         else:
             dispatcher.utter_message(text=f"No tools are required for the step.")
         return []
 
+# Action for methods at a specific step
 class ActionMethodsAtStep(Action):
     def name(self) -> Text:
         return "action_methods_at_step"
@@ -440,11 +332,63 @@ class ActionMethodsAtStep(Action):
         step_index = get_step_index(step_type, current_step, total_steps)
 
         methods = extract_cooking_methods([recipe["instructions"][step_index]])
-
         if methods:
-            dispatcher.utter_message(
-                text=f"Methods:\n{', '.join(methods)}"
-            )
+            dispatcher.utter_message(text=f"Methods:\n{', '.join(methods)}")
         else:
             dispatcher.utter_message(text=f"No methods are mentioned for the step.")
+        return []
+
+class ActionIngredientsAtStep(Action):
+    def name(self) -> Text:
+        return "action_ingredients_at_step"
+
+    def run(
+        self, dispatcher: CollectingDispatcher, tracker: Tracker, domain: Dict[Text, Any]
+    ) -> List[Dict[Text, Any]]:
+        step_type = tracker.get_slot("step_type")
+        if "latest" not in RECIPE_CACHE:
+            dispatcher.utter_message(text="I don't have a recipe loaded. Please provide a recipe URL first.")
+            return []
+
+        recipe = RECIPE_CACHE["latest"]
+        current_step = recipe["current_step"]
+        total_steps = len(recipe["instructions"])
+        step_index = get_step_index(step_type, current_step, total_steps)
+
+        # Ensure valid step index
+        if step_index >= len(recipe["instructions"]):
+            dispatcher.utter_message(
+                text=f"Invalid step type '{step_type}' or no instructions available for the specified step."
+            )
+            return []
+
+        step_text = recipe["instructions"][step_index].lower()
+
+        # Check ingredients data structure
+        if not isinstance(recipe["ingredients"], list):
+            dispatcher.utter_message(text="Ingredients data is not properly structured.")
+            return []
+
+        # Extract ingredients mentioned in the step
+        mentioned_ingredients = []
+        for ingredient in recipe["ingredients"]:
+            if isinstance(ingredient, dict):
+                # Combine all dictionary values into a single string for cross-referencing
+                ingredient_text = " ".join(value for value in ingredient.values() if value).lower()
+            else:
+                ingredient_text = str(ingredient).lower()
+
+            # Cross-reference with the step text, excluding tools
+            if any(word in step_text for word in ingredient_text.split()):
+                mentioned_ingredients.append(ingredient_text)
+
+        if mentioned_ingredients:
+            dispatcher.utter_message(
+                text=f"Ingredients:\n{'; '.join(mentioned_ingredients)}"
+            )
+        else:
+            dispatcher.utter_message(
+                text=f"No ingredients are mentioned for the step."
+            )
+
         return []

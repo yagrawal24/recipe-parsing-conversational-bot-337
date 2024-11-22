@@ -38,3 +38,6 @@
     - What is the previous step?
     - Tell me the previous step.
     - What's the step before this one?
+    - What tools are needed for the current step?
+    - What methods are used for the current step?
+    - What ingredients are needed for the current step?
