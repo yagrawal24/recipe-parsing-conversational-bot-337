@@ -2,43 +2,33 @@ version: "3.1"
 
 rules:
 
-- rule: Say hello anytime the user says hello
+- rule: Greet and ask for URL
   steps:
   - intent: greet
   - action: utter_greet
+  - action: utter_ask_url
 
-- rule: Say goodbye anytime the user says goodbye
+- rule: Respond to goodbye
   steps:
   - intent: goodbye
   - action: utter_goodbye
 
-# - rule: Ask for URL
-#   steps:
-#   - intent: provide_url
-#   - action: action_fetch_recipe
+- rule: Respond to invalid URL
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
 
-# - rule: Ask for a URL after greeting
-#   steps:
-#   - intent: greet
-#   - action: utter_greet
-#   - action: action_listen
+- rule: Fetch recipe
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
 
-# - rule: Handle recipe URL
-#   steps:
-#   - intent: provide_url
-#   - action: action_fetch_recipe
-
-# - rule: Ask for ingredients
-#   steps:
-#   - intent: ask_ingredients
-#   - action: action_list_ingredients
-
-- rule: Ask for ingredients after providing a recipe
+- rule: Respond with ingredients
   steps:
   - intent: ask_ingredients
-  - action: action_fetch_recipe_and_ingredients
+  - action: action_list_ingredients
 
-- rule: Say 'I am a bot' anytime the user challenges
+- rule: Say 'I am a bot'
   steps:
   - intent: bot_challenge
   - action: utter_iamabot

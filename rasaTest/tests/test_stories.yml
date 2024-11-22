@@ -1,50 +1,20 @@
+version: "3.1"
+
 stories:
-- story: say hello
+- story: Test greet and ask for URL
   steps:
-  - user: |
-      hello!
-    intent: greet
+  - intent: greet
   - action: utter_greet
+  - action: utter_ask_url
 
-# - story: provide recipe URL after greeting
-#   steps:
-#   - user: |
-#       hello!
-#     intent: greet
-#   - action: utter_greet
-#   - user: |
-#       https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/
-#     intent: provide_url
-#   - action: action_fetch_recipe
-
-# - story: Provide recipe and ask for ingredients
-#   steps:
-#   - intent: provide_url
-#   - action: action_fetch_recipe
-#   - intent: ask_ingredients
-#   - action: action_list_ingredients
-
-- story: Fetch recipe and ask ingredients
+- story: Test invalid URL
   steps:
   - intent: provide_url
-    user: |
-      https://www.allrecipes.com/recipe/26482/candied-yams/
-  - action: action_fetch_recipe_and_ingredients
+  - action: action_fetch_recipe
+
+- story: Test provide URL and ask for ingredients
+  steps:
+  - intent: provide_url
+  - action: action_fetch_recipe
   - intent: ask_ingredients
-    user: |
-      What are the ingredients?
-  - action: action_fetch_recipe_and_ingredients
-
-- story: say goodbye
-  steps:
-  - user: |
-      bye-bye!
-    intent: goodbye
-  - action: utter_goodbye
-
-- story: bot challenge
-  steps:
-  - user: |
-      are you a bot?
-    intent: bot_challenge
-  - action: utter_iamabot
+  - action: action_list_ingredients

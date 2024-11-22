@@ -9,25 +9,15 @@ intents:
   - ask_ingredients
   - bot_challenge
 
-slots:
-  ingredients:
-    type: text
-    influence_conversation: false
-    mappings:
-      - type: from_text
-
 responses:
   utter_greet:
-    - text: "Hello, My name is Gordon! I will be your personal sous chef for today. Please copy and paste a recipe URL from AllRecipes.com to get started."
+    - text: "Hello, My name is Gordon! I will be your personal sous chef for today."
 
   utter_goodbye:
     - text: "Goodbye"
 
   utter_ask_url:
     - text: "Please provide the recipe URL from AllRecipes.com."
-
-  utter_no_ingredients:
-    - text: "I don't have the ingredients yet. Please provide a recipe URL first."
 
   utter_invalid_url:
     - text: "That doesn't look like a valid AllRecipes.com URL. Please try again."
@@ -36,10 +26,8 @@ responses:
     - text: "I am a bot, powered by Rasa."
 
 actions:
-  # - action_fetch_recipe
-  # - ask_ingredients
-  # - action_list_ingredients
-  - action_fetch_recipe_and_ingredients
+  - action_fetch_recipe
+  - action_list_ingredients
 
 session_config:
   session_expiration_time: 60
