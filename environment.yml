@@ -1,29 +1,29 @@
 name: recipe
 channels:
-  - defaults
+    - defaults
 dependencies:
-  - python=3.10
-  - spacy
-  - nltk
-  - jupyterlab
-  - ftfy
-  - unidecode
-  - inflection
-  - requests
-  - beautifulsoup4
-  - pip
-  - html5lib
-  - pip:
-      - langdetect
-      - pandas
-      - emoji
-      - cairosvg
-      - matplotlib
-      - scikit-learn
-      - rapidfuzz
-      - google
-      - rasa
-      - rasa-sdk
-  - python
-  - pip:
-      - "python -m spacy download en_core_web_md"
+    - python=3.10
+    - spacy
+    - nltk
+    - jupyterlab
+    - ftfy
+    - unidecode
+    - inflection
+    - requests
+    - beautifulsoup4
+    - pip
+    - html5lib
+    - pip:
+          - langdetect
+          - pandas
+          - emoji
+          - cairosvg
+          - matplotlib
+          - scikit-learn
+          - rapidfuzz
+          - google
+          - rasa
+          - rasa-sdk
+    - python
+    - pip:
+          - "python -m spacy download en_core_web_md"

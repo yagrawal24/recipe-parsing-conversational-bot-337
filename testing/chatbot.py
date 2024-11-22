@@ -27,17 +27,25 @@ def get_step_information(instruction, info_source, type, threshold=80):
             matches.append(match[0])
             
     return list(set(matches))
+
+def get_youtube_search_url(query):
+    base_url = "https://www.youtube.com/results?search_query="
+    encoded_query = urllib.parse.quote(query)
+    return f"{base_url}{encoded_query}"
         
 def conversation():
     text = input("What recipe would you like to cook today? Please paste a recipe link from allrecipes.com here to get started.\n")
     
     ingredients, instructions = fetch_page_from_url(text)
     step = 0
+    current_context = ""  # Store the current context (usually the last instruction)
+    
     pattern_how = r"(?i)^how\s+(to|do)\b"
     pattern_how_much = r"(?i)how much (\w+)"
     pattern_how_much_step = r"(?i)how much (\w+) (do|is|for) (this step|step \d+)"
     pattern_ingredients_step =  r"(?i)what (ingredients|tools) do i need for (this|next|previous|\d+(?:st|nd|rd|th)?) step"
     pattern_what = r"(?i)^what\s+is\b"
+    pattern_how_do_vague = r"(?i)how\s+(?:do|to)\s+(?:i|we)?\s*(?:do|make)?\s*(this|that|it)\??$"
 
     while text != "Done":
         text = input("\nWhat would you like to do next?\n")
@@ -45,7 +53,7 @@ def conversation():
         if text == "What are the ingredients?":
             for i in print_ingredients_list(ingredients):
                 print(i)
-        if text == "What are the tools?":
+        elif text == "What are the tools?":
             for i in extract_tools(instructions):
                 print(i)
         
@@ -53,21 +61,32 @@ def conversation():
             if step >= len(instructions):
                 print("That was the last step!")
             else:
-                print(instructions[step])
+                current_context = instructions[step]  # Store the current step
+                print(current_context)
                 step += 1
         
         elif text == "What is the previous step?":
-            print(instructions[step-1])
+            current_context = instructions[step-1]  # Store the previous step
+            print(current_context)
             
-        elif text == "How do I do that?":
-            print("Please look at the following link for reference:")
-            print([i for i in search("How to:" + instructions[step-1], stop=1)][0])
+        # elif text == "How do I do that?":
+        #     if current_context:
+        #         search_query = "How to: " + current_context
+        #         print("Please look at the following link for reference:")
+        #         print([i for i in search(search_query, stop=1)][0])
+        #     else:
+        #         print("I'm not sure what you're referring to. Could you be more specific?")
 
+        elif re.match(pattern_how_do_vague, text):
+            if current_context:
+                youtube_url = get_youtube_search_url(f"how to {current_context}")
+                print(f"Here's a video that might help: {youtube_url}")
+            else:
+                print("I'm not sure what you're referring to. Could you be more specific?")
+            
         elif re.match(pattern_how, text):
-            base_url = "https://www.youtube.com/results?search_query="
-            encoded_query = urllib.parse.quote(text)
-            final_url = f"{base_url}{encoded_query}"
-            print(f"No worries. I found a reference for you: {final_url}")
+            youtube_url = get_youtube_search_url(text)
+            print(f"No worries. I found a reference for you: {youtube_url}")
             
         # Handle "How much X do I need?"
         elif re.match(pattern_how_much, text):
@@ -115,7 +134,6 @@ def conversation():
             if step_number is None or step_number < 1 or step_number > len(instructions):
                 print("That step does not exist.")
             else:
-                # get a list of all ingredients
                 if "ingredients" in text.lower():
                     step_ingredients = get_step_information(instructions[step_number-1], ingredients, "ingredients")
                                 
@@ -138,9 +156,7 @@ def conversation():
                         for i in tools:
                             print(f"\t{i}")
                     else:
-                        print(f"No ingredients are needed for this step.")
-        
-
+                        print(f"No tools are needed for this step.")
         
         elif text != "Done":
             print("I'm sorry, I'm not smart enough to understand that!")
