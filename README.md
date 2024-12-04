@@ -15,9 +15,10 @@
 
 #### Inside of "rasa shell"
 - Say "Hello"
-- Copy and paste recipes
+- Copy and paste urls
 - Ask how to and what questions
 - Can ask any questions listed in rasaTest/data/nlu.yml
+    - Show me the full recipe.
     - What are the ingredients?
     - Tell me the ingredients.
     - Can you list the ingredients?
@@ -38,3 +39,6 @@
     - What is the previous step?
     - Tell me the previous step.
     - What's the step before this one?
+    - What tools are needed for the current step?
+    - What methods are used for the current step?
+    - What ingredients are needed for the current step?
