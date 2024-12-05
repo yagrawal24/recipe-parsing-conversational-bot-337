@@ -5,6 +5,7 @@ import inflection
 import re
 import spacy
 import json
+import urllib.parse
 from rapidfuzz import fuzz, process
 
 # Load SpaCy model
@@ -103,6 +104,24 @@ def extract_cooking_methods_per_step(instructions):
         methods_per_step.append({"step": instruction, "methods": sorted(list(methods))})
 
     return methods_per_step
+
+def get_youtube_search_url(query):
+    base_url = "https://www.youtube.com/results?search_query="
+    encoded_query = urllib.parse.quote(query)
+    return f"{base_url}{encoded_query}"
+
+def get_how_to_query_url(text, current_context=None):
+    pattern_how_do_vague = r"how do i .*"
+    pattern_how = r"how to .*"
+
+    if re.match(pattern_how_do_vague, text):
+        if current_context:
+            return get_youtube_search_url(f"how to {current_context}")
+        else:
+            return None 
+    elif re.match(pattern_how, text):
+        return get_youtube_search_url(text)
+    return None
 
 def extract_instructions(soup):
     header = soup.find('h2', string="Directions")
