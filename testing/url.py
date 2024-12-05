@@ -82,6 +82,28 @@ def extract_cooking_methods(instructions):
     
     return sorted(list(cooking_methods))
 
+def extract_cooking_methods_per_step(instructions):
+    methods_per_step = []
+
+    for instruction in instructions:
+        sentences = re.split(r'[.?!]', instruction)
+        methods = set()
+
+        for sentence in sentences:
+            if sentence.strip():
+                doc = nlp(sentence.strip().lower())
+                for i, token in enumerate(doc):
+                    if token.pos_ == "VERB":
+                        is_start = i == 0 or doc[i - 1].text in {"then", "and", ",", ";"}
+                        has_object = any(child.dep_ in {"dobj", "pobj"} for child in token.children)
+
+                        if is_start or has_object:
+                            methods.add(token.text.capitalize())
+
+        methods_per_step.append({"step": instruction, "methods": sorted(list(methods))})
+
+    return methods_per_step
+
 def extract_instructions(soup):
     header = soup.find('h2', string="Directions")
 
@@ -174,3 +196,17 @@ if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
     # url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
     fetch_page_from_url(url)
+
+    ### Test extract methods per step below ###
+
+    # ingredients, instructions = fetch_page_from_url(url)
+
+    # print("Extracted instructions:")
+    # print(instructions)
+
+    # methods_per_step = extract_cooking_methods_per_step(instructions)
+    # print("\nCooking methods per step:")
+    # for step_info in methods_per_step:
+    #     print(f"Step: {step_info['step']}")
+    #     print(f"Methods: {', '.join(step_info['methods'])}")
+    #     print("-" * 50)
