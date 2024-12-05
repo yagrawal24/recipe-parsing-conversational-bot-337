@@ -5,6 +5,7 @@ import inflection
 import re
 import spacy
 import json
+from rapidfuzz import fuzz, process
 
 # Load SpaCy model
 nlp = spacy.load("en_core_web_md")
@@ -27,17 +28,8 @@ def fetch_page_from_url(url):
             parsed_url = urlparse(url)
             url_title = parsed_url.path.split('/')[-2]
             title = inflection.titleize(url_title.replace('-', ' '))
-
-        ingredients_raw = [i.find_all('span') for i in soup.find_all("li", class_="mm-recipes-structured-ingredients__list-item")]
-
-        ingredients = []
-
-        for i in ingredients_raw:
-            curr_dict = {}
-            for j in i:
-                key = list(j.attrs.keys())[0].split('-')[-1]
-                curr_dict.update({key:j.string})
-            ingredients.append(curr_dict)
+        
+        ingredients = extract_ingredients(soup)
             
         instructions = extract_instructions(soup)
 
@@ -101,11 +93,82 @@ def extract_instructions(soup):
                 break
 
             if sibling.name == "p" and "compmntl-sc-blockmntl-sc-block-html" in ''.join(sibling.get("class", [])):
-                recipe_steps.append(sibling.get_text(strip=True))
+                step = sibling.get_text(strip=True)
+                recipe_steps += step.split('. ')
 
         return recipe_steps
     else:
         print("No directions found!")
+
+def classify(ingredient):
+    '''
+    Helper for extract_ingredients that separates information about an ingredient into components
+    '''
+    doc = nlp(ingredient)
+    pairs = []
+    for e in doc:
+        if e.pos_ == "VERB" or e.pos_ == "ADV":
+            pairs.append(["preparation", e.text])
+        elif e.pos_ == "ADJ":
+            pairs.append(["descriptor", e.text])
+        elif e.pos_ == "NOUN" or e.pos_ == "PROPN":
+            pairs.append(["name", e.text])
+    
+    return pairs
+
+def extract_ingredients(soup):
+    ingredients_html = [i for i in soup.find_all("li", class_="mm-recipes-structured-ingredients__list-item")]
+
+    full_list = [i.find('p').text for i in ingredients_html]
+
+    ingredients_lst = []
+    for ingredient in ingredients_html:
+        sub_dict = {}
+        for child in ingredient.find('p').children:
+            if child.text.strip() != "":
+                if child.name == "span":
+                    sub_dict.update({list(child.attrs.keys())[0].split('-')[-1]:child.text.strip()})
+                else:
+                    sub_dict.update({"other":child.strip()})
+                    
+        if "other" in list(sub_dict.keys()):
+            sub_dict['name'] = sub_dict['other'] + " " + sub_dict['name']
+            del sub_dict['other']
+        
+        if " or " in sub_dict['name']:
+            splt = sub_dict['name'].split(" or ")
+            sub_dict['name'] = splt[0]
+            sub_dict.update({'alternative':splt[1]})
+            
+        ingredients_lst.append(sub_dict)
+    
+    for i in ingredients_lst:
+        new_pairs = classify(i["name"])
+        i["name"] = ''
+        
+        for key, word in new_pairs:
+            if key not in i:
+                i.update({key:word})
+            else:
+                i[key] += " " + word
+                
+    return ingredients_lst
+
+def get_step_information(instruction, info_source, type, threshold=80):
+    noun_chunks = [i.text for i in nlp(instruction).noun_chunks]
+    
+    if type == "ingredients":
+        info = [i['name'] for i in info_source]
+    elif type == "tools":
+        info = info_source
+        
+    matches = []
+    for chunk in noun_chunks:
+        match = process.extractOne(chunk, info, scorer=fuzz.partial_ratio)
+        if match and match[1] >= threshold:
+            matches.append(match[0])
+            
+    return list(set(matches))
 
 if __name__ == "__main__":
     url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
