@@ -68,7 +68,8 @@ mexican_style = {
     "replacements": {
         "rice": "mexican rice",
         "cheese": "queso fresco",
-        "cream": "mexican crema"
+        "cream": "mexican crema",
+        "bread": "tortilla"
     }
 }
 
