@@ -263,18 +263,32 @@ def find_ingredients(ingredients, substitution_map):
             replacements.update(matches)
     return replacements
 
+# def replace_ingredients(ingredients, alternatives):
+#     updated_ingredients = ingredients.copy()
+
+#     for ingredient in updated_ingredients:
+#         ingredient_name = ingredient.get('name', '').strip().lower()
+
+#         for to_replace, replacer in alternatives:
+#             if to_replace in ingredient_name:
+#                 ingredient['name'] = replacer[0]
+#                 break
+
+#     return updated_ingredients
+
 def replace_ingredients(ingredients, alternatives):
     updated_ingredients = ingredients.copy()
 
     for ingredient in updated_ingredients:
         ingredient_name = ingredient.get('name', '').strip().lower()
 
-        for to_replace, replacer in alternatives:
-            if to_replace in ingredient_name:
-                ingredient['name'] = replacer[0]
+        for to_replace, replacers in alternatives.items():
+            if to_replace.lower() in ingredient_name:
+                ingredient['name'] = replacers[0]
                 break
 
     return updated_ingredients
+
 
 def modify_recipe_instructions(instructions, ingredients, alternatives, threshold=80):
     # modified = instructions.copy()
@@ -297,29 +311,51 @@ def modify_recipe_instructions(instructions, ingredients, alternatives, threshol
     #     modified[i] = current_instruction.capitalize()
                     
     # return modified
-    modified = instructions.copy()
+
+    modified = instructions.copy()  # Create a copy to avoid mutating original
+
     for j, instruction in enumerate(modified):
-        noun_chunks = []
-        current_instruction = instruction.lower()
-        
+        current_instruction = instruction.lower()  # Normalize instruction text
         for i in nlp(current_instruction).noun_chunks:
-            all_ingredients = i.text.split(", ")
-            if isinstance(all_ingredients, list):
-                noun_chunks += all_ingredients
-            else:
-                noun_chunks.append(all_ingredients.strip())
-        
-        info = [i['name'] for i in ingredients]
-            
-        for chunk in noun_chunks:
+            chunk = i.text.strip()
+            info = [i['name'].lower() for i in ingredients]  # Normalize ingredients
             match = process.extractOne(chunk, info, scorer=fuzz.partial_ratio)
-            if match and match[1] >= threshold:
-                if match[0].strip() in alternatives.keys():
-                    current_instruction = current_instruction.replace(chunk, ' or '.join(alternatives[match[0].strip()]))
-        
+
+            if match and match[1] >= threshold:  # Check match confidence
+                matched_name = match[0].strip()
+                if matched_name in alternatives:  # Replace with alternatives
+                    replacement = ' or '.join(alternatives[matched_name])
+                    current_instruction = current_instruction.replace(chunk, replacement)
+                    print(f"Replaced '{chunk}' with '{replacement}' in: {instruction}")
+
         modified[j] = current_instruction.capitalize()
-            
+
     return modified
+
+    # modified = instructions.copy()
+    # for j, instruction in enumerate(modified):
+    #     noun_chunks = []
+    #     current_instruction = instruction.lower()
+        
+    #     for i in nlp(current_instruction).noun_chunks:
+    #         all_ingredients = i.text.split(", ")
+    #         if isinstance(all_ingredients, list):
+    #             noun_chunks += all_ingredients
+    #         else:
+    #             noun_chunks.append(all_ingredients.strip())
+        
+    #     # info = [i['name'] for i in ingredients]
+    #     info = [i['name'].lower() for i in ingredients]
+            
+    #     for chunk in noun_chunks:
+    #         match = process.extractOne(chunk, info, scorer=fuzz.partial_ratio)
+    #         if match and match[1] >= threshold:
+    #             if match[0].strip() in alternatives.keys():
+    #                 current_instruction = current_instruction.replace(chunk, ' or '.join(alternatives[match[0].strip()]))
+        
+    #     modified[j] = current_instruction.capitalize()
+            
+    # return modified
 
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
@@ -330,21 +366,25 @@ if __name__ == "__main__":
 
     ingredients, instructions = fetch_page_from_url(url)
 
-    # print(instructions)
+    print(instructions)
+    print('\n')
 
     # print(ingredients)
+    # print('\n')
 
     alternatives = find_ingredients(ingredients, to_vegetarian)
 
-    print(alternatives)
+    # print(alternatives)
 
-    # ingredients = replace_ingredients(ingredients, alternatives)
+    ingredients = replace_ingredients(ingredients, alternatives)
 
     # print(ingredients)
+    # print('\n')
 
-    instructions = modify_recipe_instructions(instructions, alternatives)
+    instructions = modify_recipe_instructions(instructions, ingredients, alternatives)
 
     print(instructions)
+    print('\n')
 
     # methods_per_step = extract_cooking_methods_per_step(instructions)
     # print("\nCooking methods per step:")
