@@ -289,73 +289,26 @@ def replace_ingredients(ingredients, alternatives):
 
     return updated_ingredients
 
+def transform_instructions(instructions, transformation_map):
+    transformed_instructions = []
 
-def modify_recipe_instructions(instructions, ingredients, alternatives, threshold=80):
-    # modified = instructions.copy()
-    # sorted_substitutions = sorted(substitutions, key=lambda x: len(x[0]), reverse=True)
-    
-    # for i, instruction in enumerate(modified):
-    #     current_instruction = instruction.lower()
-    #     for original, alternatives in sorted_substitutions:
-    #         pos = current_instruction.find(original.lower())
-    #         if pos != -1:
-    #             before = pos == 0 or not current_instruction[pos-1].isalpha()
-    #             after = (pos + len(original) == len(current_instruction) or 
-    #                     not current_instruction[pos + len(original)].isalpha())
-                
-    #             if before and after:
-    #                 current_instruction = current_instruction.replace(
-    #                     original.lower(), 
-    #                     alternatives[0]
-    #                 )
-    #     modified[i] = current_instruction.capitalize()
-                    
-    # return modified
+    for instruction in instructions:
+        transformed_instruction = instruction
 
-    modified = instructions.copy()  # Create a copy to avoid mutating original
-
-    for j, instruction in enumerate(modified):
-        current_instruction = instruction.lower()  # Normalize instruction text
-        for i in nlp(current_instruction).noun_chunks:
-            chunk = i.text.strip()
-            info = [i['name'].lower() for i in ingredients]  # Normalize ingredients
-            match = process.extractOne(chunk, info, scorer=fuzz.partial_ratio)
-
-            if match and match[1] >= threshold:  # Check match confidence
-                matched_name = match[0].strip()
-                if matched_name in alternatives:  # Replace with alternatives
-                    replacement = ' or '.join(alternatives[matched_name])
-                    current_instruction = current_instruction.replace(chunk, replacement)
-                    print(f"Replaced '{chunk}' with '{replacement}' in: {instruction}")
-
-        modified[j] = current_instruction.capitalize()
-
-    return modified
-
-    # modified = instructions.copy()
-    # for j, instruction in enumerate(modified):
-    #     noun_chunks = []
-    #     current_instruction = instruction.lower()
+        for original, replacements in transformation_map.items():
+            # Join the replacements if they are a list
+            replacement = ", ".join(replacements) if isinstance(replacements, list) else replacements
+            transformed_instruction = re.sub(
+                r"\b" + re.escape(original) + r"\b", 
+                replacement, 
+                transformed_instruction, 
+                flags=re.IGNORECASE
+            )
         
-    #     for i in nlp(current_instruction).noun_chunks:
-    #         all_ingredients = i.text.split(", ")
-    #         if isinstance(all_ingredients, list):
-    #             noun_chunks += all_ingredients
-    #         else:
-    #             noun_chunks.append(all_ingredients.strip())
-        
-    #     # info = [i['name'] for i in ingredients]
-    #     info = [i['name'].lower() for i in ingredients]
-            
-    #     for chunk in noun_chunks:
-    #         match = process.extractOne(chunk, info, scorer=fuzz.partial_ratio)
-    #         if match and match[1] >= threshold:
-    #             if match[0].strip() in alternatives.keys():
-    #                 current_instruction = current_instruction.replace(chunk, ' or '.join(alternatives[match[0].strip()]))
-        
-    #     modified[j] = current_instruction.capitalize()
-            
-    # return modified
+        transformed_instructions.append(transformed_instruction)
+
+    return transformed_instructions
+
 
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
@@ -381,9 +334,9 @@ if __name__ == "__main__":
     # print(ingredients)
     # print('\n')
 
-    instructions = modify_recipe_instructions(instructions, ingredients, alternatives)
+    transformed_instructions = transform_instructions(instructions, to_vegetarian)
 
-    print(instructions)
+    print(transformed_instructions)
     print('\n')
 
     # methods_per_step = extract_cooking_methods_per_step(instructions)
