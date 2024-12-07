@@ -309,6 +309,42 @@ def transform_instructions(instructions, transformation_map):
 
     return transformed_instructions
 
+def transform_cooking_methods_to_refined(instructions, to_method):
+    cooking_methods_list = [
+        "bake", "fry", "grill", "steam", "simmer", "roast", "saute", "broil",
+        "stir", "poach", "boil", "sear", "braise", "toast", "pressure cook"
+    ]  # Extend this list as needed
+
+    transformed_instructions = []
+
+    for instruction in instructions:
+        doc = nlp(instruction.lower())
+        methods_in_instruction = set()
+
+        # Identify verbs that are cooking methods and have cooking-related contexts
+        for token in doc:
+            if (
+                token.pos_ == "VERB" 
+                and token.lemma_ in cooking_methods_list
+                and any(child.dep_ in {"dobj", "prep", "advmod"} for child in token.children)
+            ):  # Ensure the verb is likely part of a cooking action
+                methods_in_instruction.add(token.text)
+
+        # Replace each detected cooking method with `to_method`
+        transformed_instruction = instruction.lower()
+        for method in methods_in_instruction:
+            transformed_instruction = re.sub(
+                r"\b" + re.escape(method) + r"\b",  # Match whole word
+                to_method.lower(),
+                transformed_instruction,
+                flags=re.IGNORECASE
+            )
+
+        # Capitalize the transformed instruction
+        transformed_instructions.append(transformed_instruction.capitalize())
+
+    return transformed_instructions
+
 
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
@@ -325,16 +361,21 @@ if __name__ == "__main__":
     # print(ingredients)
     # print('\n')
 
-    alternatives = find_ingredients(ingredients, to_vegetarian)
+    # alternatives = find_ingredients(ingredients, to_vegetarian)
 
     # print(alternatives)
 
-    ingredients = replace_ingredients(ingredients, alternatives)
+    # ingredients = replace_ingredients(ingredients, alternatives)
 
     # print(ingredients)
     # print('\n')
 
-    transformed_instructions = transform_instructions(instructions, to_vegetarian)
+    # transformed_instructions = transform_instructions(instructions, to_healthy)
+
+    # print(transformed_instructions)
+    # print('\n')
+
+    transformed_instructions = transform_cooking_methods_to_refined(instructions, "roast")
 
     print(transformed_instructions)
     print('\n')
