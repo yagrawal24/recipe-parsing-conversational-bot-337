@@ -7,6 +7,8 @@ import spacy
 import json
 import urllib.parse
 from rapidfuzz import fuzz, process
+from mapping import *
+from difflib import SequenceMatcher
 
 # Load SpaCy model
 nlp = spacy.load("en_core_web_md")
@@ -196,7 +198,14 @@ def extract_ingredients(soup):
     return ingredients_lst
 
 def get_step_information(instruction, info_source, type, threshold=80):
-    noun_chunks = [i.text for i in nlp(instruction).noun_chunks]
+    noun_chunks = []
+    
+    for i in nlp(instruction).noun_chunks:
+        all_ingredients = i.text.split(", ")
+        if isinstance(all_ingredients, list):
+            noun_chunks += all_ingredients
+        else:
+            noun_chunks.append(all_ingredients.strip())
     
     if type == "ingredients":
         info = [i['name'] for i in info_source]
@@ -211,17 +220,131 @@ def get_step_information(instruction, info_source, type, threshold=80):
             
     return list(set(matches))
 
+def find_ingredients(ingredients, substitution_map):
+    def singularize(word):
+        if word.endswith('ies'):
+            return word[:-3] + 'y'
+        elif word.endswith('es'):
+            return word[:-2]
+        elif word.endswith('s') and not word.endswith('ss'):
+            return word[:-1]
+        return word
+    
+    def find_best_match(ingredient_dict):
+        ingredient_name = ingredient_dict['name'].strip()
+        ingredient_lower = ' '.join(singularize(word) for word in ingredient_name.lower().split())
+        words = ingredient_lower.split()
+        
+        if 'ground' in words:
+            next_word_index = words.index('ground') + 1
+            if next_word_index < len(words) and words[next_word_index] in proteins:
+                protein = words[next_word_index]
+                return [
+                    (ingredient_name, substitution_map_lower['ground']),
+                    (protein, ['tvp', 'soy crumbles'])
+                ]
+            return None
+        
+        if ingredient_lower in substitution_map_lower:
+            return {ingredient_name: substitution_map_lower[ingredient_lower]}
+        
+        for key in substitution_map_lower:
+            if key in words:
+                return {ingredient_name: substitution_map_lower[key]}
+        return None
+    
+    replacements = {}    
+    substitution_map_lower = {k.lower(): v for k, v in substitution_map.items()}
+    proteins = {'chicken', 'beef', 'pork', 'turkey', 'lamb', 'veal', 'fish'}
+    
+    for ingredient in ingredients:
+        matches = find_best_match(ingredient)
+        if matches:
+            replacements.update(matches)
+    return replacements
+
+def replace_ingredients(ingredients, alternatives):
+    updated_ingredients = ingredients.copy()
+
+    for ingredient in updated_ingredients:
+        ingredient_name = ingredient.get('name', '').strip().lower()
+
+        for to_replace, replacer in alternatives:
+            if to_replace in ingredient_name:
+                ingredient['name'] = replacer[0]
+                break
+
+    return updated_ingredients
+
+def modify_recipe_instructions(instructions, ingredients, alternatives, threshold=80):
+    # modified = instructions.copy()
+    # sorted_substitutions = sorted(substitutions, key=lambda x: len(x[0]), reverse=True)
+    
+    # for i, instruction in enumerate(modified):
+    #     current_instruction = instruction.lower()
+    #     for original, alternatives in sorted_substitutions:
+    #         pos = current_instruction.find(original.lower())
+    #         if pos != -1:
+    #             before = pos == 0 or not current_instruction[pos-1].isalpha()
+    #             after = (pos + len(original) == len(current_instruction) or 
+    #                     not current_instruction[pos + len(original)].isalpha())
+                
+    #             if before and after:
+    #                 current_instruction = current_instruction.replace(
+    #                     original.lower(), 
+    #                     alternatives[0]
+    #                 )
+    #     modified[i] = current_instruction.capitalize()
+                    
+    # return modified
+    modified = instructions.copy()
+    for j, instruction in enumerate(modified):
+        noun_chunks = []
+        current_instruction = instruction.lower()
+        
+        for i in nlp(current_instruction).noun_chunks:
+            all_ingredients = i.text.split(", ")
+            if isinstance(all_ingredients, list):
+                noun_chunks += all_ingredients
+            else:
+                noun_chunks.append(all_ingredients.strip())
+        
+        info = [i['name'] for i in ingredients]
+            
+        for chunk in noun_chunks:
+            match = process.extractOne(chunk, info, scorer=fuzz.partial_ratio)
+            if match and match[1] >= threshold:
+                if match[0].strip() in alternatives.keys():
+                    current_instruction = current_instruction.replace(chunk, ' or '.join(alternatives[match[0].strip()]))
+        
+        modified[j] = current_instruction.capitalize()
+            
+    return modified
+
 if __name__ == "__main__":
-    url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
-    # url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
-    fetch_page_from_url(url)
+    # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
+    url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
+    # fetch_page_from_url(url)
 
     ### Test extract methods per step below ###
 
-    # ingredients, instructions = fetch_page_from_url(url)
+    ingredients, instructions = fetch_page_from_url(url)
 
-    # print("Extracted instructions:")
     # print(instructions)
+
+    # print(ingredients)
+
+    alternatives = find_ingredients(ingredients, to_vegetarian)
+
+    print(alternatives)
+
+    # ingredients = replace_ingredients(ingredients, alternatives)
+
+    # print(ingredients)
+
+    instructions = modify_recipe_instructions(instructions, alternatives)
+
+    print(instructions)
 
     # methods_per_step = extract_cooking_methods_per_step(instructions)
     # print("\nCooking methods per step:")
