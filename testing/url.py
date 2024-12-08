@@ -157,7 +157,7 @@ def classify(ingredient):
         if e.pos_ == "VERB" or e.pos_ == "ADV":
             pairs.append(["preparation", e.text])
         elif e.pos_ == "ADJ":
-            pairs.append(["preparation", e.text])
+            pairs.append(["descriptor", e.text])
         elif e.pos_ == "NOUN" or e.pos_ == "PROPN":
             pairs.append(["name", e.text])
     
@@ -435,8 +435,7 @@ def scale_instructions(ingredients, instructions, factor=None):
             measurements.add(ing["unit"].lower())
 
         if "name" in ing and ing["name"]:
-            # first_word = ing["name"].split()[0].lower()
-            ingredient_names.add(ing["name"])
+            ingredient_names.add(ing['descriptor'] + ing["name"] if 'descriptor' in ing.keys() else ing['name'])
 
     scaled_instructions = []
 
