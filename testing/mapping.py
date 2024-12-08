@@ -52,15 +52,65 @@ from_healthy = {
 }
 
 # Cuisine Styles (base ingredients for transformation)
+# chinese_style = {
+#     "core_ingredients": ["soy sauce", "ginger", "garlic", "sesame oil", "rice vinegar"],
+#     "spices": ["five spice", "white pepper"],
+#     "cooking_methods": ["stir fry", "steam", "braise"],
+#     "replacements": {
+#         "olive oil": "sesame oil",
+#         "vinegar": "rice vinegar",
+#         "pasta": "noodles",
+#         "herbs": "green onions"
+#     }
+# }
+
 chinese_style = {
-    "core_ingredients": ["soy sauce", "ginger", "garlic", "sesame oil", "rice vinegar"],
-    "spices": ["five spice", "white pepper"],
-    "cooking_methods": ["stir fry", "steam", "braise"],
-    "replacements": {
-        "olive oil": "sesame oil",
-        "vinegar": "rice vinegar",
-        "pasta": "noodles",
-        "herbs": "green onions"
+    'ingredients': {
+        "butter": ["sesame oil", "peanut oil"],
+        "olive oil": ["sesame oil", "peanut oil"],
+        "corn oil": ["sesame oil", "peanut oil"],
+        "vegetable oil": ["peanut oil"],
+        "bread": ["bao buns", "scallion pancakes"],
+        "rice": ["jasmine rice", "sticky rice"],
+        "noodles": ["lo mein", "rice noodles"],
+        "pasta": ["lo mein", "glass noodles"],
+        "dumplings": ["potstickers", "dim sum dumplings"],
+        "potatoes": ["taro", "lotus root"],
+        "tofu": ["silken tofu", "fermented tofu"],
+        "paneer": ["silken tofu"],
+        "cream": ["coconut milk"],
+        "sour cream": ["coconut cream"],
+        "yogurt": ["soy milk", "coconut yogurt"],
+        "lemon juice": ["lime juice"],
+        "vinegar": ["rice vinegar", "black vinegar"],
+        "balsamic vinegar": ["black vinegar"],
+        "soy sauce": ["dark soy sauce", "light soy sauce"],
+        "fish sauce": ["oyster sauce", "hoisin sauce"],
+        "bell peppers": ["bok choy", "baby corn"],
+        "jalapeños": ["Sichuan peppercorns", "red chili"],
+        "okra": ["snow peas", "water chestnuts"],
+        "bok choy": ["napa cabbage"],
+        "cilantro": ["scallions"],
+        "parsley": ["scallions"],
+        "mint": ["Thai basil"],
+        "pickled vegetables": ["pickled mustard greens"],
+        "tortilla chips": ["fried wonton strips"],
+        "chutney": ["plum sauce", "sweet chili sauce"],
+        "cumin": ["five spice powder"],
+        "garam masala": ["five spice powder"],
+        "paprika": ["Sichuan chili flakes"],
+        "chili powder": ["Sichuan chili flakes", "ground chili"],
+        "red pepper flakes": ["Sichuan chili flakes"],
+        "salt": ["soy sauce"],
+        "lemon zest": ["lime zest"],
+        "bay leaves": ["star anise"],
+    },
+    'techniques': {
+        "stir-fry": ["wok toss"],
+        "steam": ["double boil"],
+        "deep fry": ["light fry"],
+        "bake": ["steam bake"],
+        "grill": ["char over flame"],
     }
 }
 
@@ -111,8 +161,8 @@ mexican_style = {
         "croutons": ["fried tortilla strips"],
         "herbes de provence": ["cumin"],
         "italian seasoning": ["cumin"],
-        "thyme": ["Mexican oregano"],
-        "rosemary": ["Mexican oregano"],
+        "thyme": ["oregano"],
+        "rosemary": ["oregano"],
         "basil": ["cilantro"],
         "parsley": ["cilantro"],
         "dill": ["epazote"],
@@ -192,16 +242,6 @@ italian_style = {
         "steam": ["poach"]
     }
 }
-
-# cooking_method_transforms = {
-#     "bake": ["fry", "grill", "air fry"],
-#     "fry": ["bake", "grill", "air fry"],
-#     "grill": ["bake", "pan sear", "broil"],
-#     "steam": ["boil", "microwave", "pressure cook"],
-#     "saute": ["stir fry", "grill", "bake"],
-#     "roast": ["air fry", "grill", "pan sear"],
-#     "broil": ["grill", "bake", "pan sear"]
-# }
 
 cooking_method_transforms = {
     "bake": ["fry", "grill", "air fry"],

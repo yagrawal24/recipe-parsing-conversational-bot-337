@@ -41,7 +41,6 @@ def fetch_page_from_url(url):
     except requests.exceptions.RequestException as e:
         return f"An error occurred: {e}"
 
-# put ingredients and instructions in a .txt file for human readability
 def print_ingredients_list(ingredients_list):
     ingredients_print = []
     for i in ingredients_list:
@@ -69,7 +68,6 @@ def extract_tools(instructions):
     return list(tools_set)
 
 def extract_cooking_methods(instructions):
-    # nlp = spacy.load("en_core_web_sm")
     cooking_methods = set()
     
     for instruction in instructions:
@@ -276,66 +274,39 @@ def replace_ingredients(ingredients, alternatives):
 
     return updated_ingredients
 
-# def transform_instructions(instructions, transformation_map):
-#     transformed_instructions = []
-
-#     for instruction in instructions:
-#         transformed_instruction = instruction
-
-#         for original, replacements in transformation_map.items():
-#             # Join the replacements if they are a list
-#             replacement = ", ".join(replacements) if isinstance(replacements, list) else replacements
-#             transformed_instruction = re.sub(
-#                 r"\b" + re.escape(original) + r"\b", 
-#                 replacement, 
-#                 transformed_instruction, 
-#                 flags=re.IGNORECASE
-#             )
-        
-#         transformed_instructions.append(transformed_instruction)
-
-#     return transformed_instructions
-
-def transform_cooking_methods_to_refined(instructions, to_method):
+def transform_cooking_methods(instructions, to_method):
     cooking_methods_list = [
         "bake", "fry", "grill", "steam", "simmer", "roast", "saute", "broil",
         "stir", "poach", "boil", "sear", "braise", "toast", "pressure cook"
-    ]  # Extend this list as needed
+    ]
 
     transformed_instructions = []
 
     for instruction in instructions:
         doc = nlp(instruction.lower())
         methods_in_instruction = set()
-
-        # Identify verbs that are cooking methods and have cooking-related contexts
         for token in doc:
             if (
                 token.pos_ == "VERB" 
                 and token.lemma_ in cooking_methods_list
                 and any(child.dep_ in {"dobj", "prep", "advmod"} for child in token.children)
-            ):  # Ensure the verb is likely part of a cooking action
+            ):
                 methods_in_instruction.add(token.text)
-
-        # Replace each detected cooking method with `to_method`
         transformed_instruction = instruction.lower()
         for method in methods_in_instruction:
             transformed_instruction = re.sub(
-                r"\b" + re.escape(method) + r"\b",  # Match whole word
+                r"\b" + re.escape(method) + r"\b",
                 to_method.lower(),
                 transformed_instruction,
                 flags=re.IGNORECASE
             )
-
-        # Capitalize the transformed instruction
         transformed_instructions.append(transformed_instruction.capitalize())
 
     return transformed_instructions
 
 def adjust_ingredient_amounts_with_rules(ingredients, factor):
-    # Define sensitive ingredient rules
     sensitive_ingredients = {
-        "salt": 1.5,  # Maximum scaling factor for salt
+        "salt": 1.5,
         "red pepper flakes": 1.5,
         "baking powder": 1.2,
         "baking soda": 1.2,
@@ -349,55 +320,44 @@ def adjust_ingredient_amounts_with_rules(ingredients, factor):
 
     for ingredient in ingredients:
         adjusted_ingredient = ingredient.copy()
-
-        # Handle the quantity field
         quantity = ingredient.get("quantity")
         name = ingredient.get("name", "").lower().strip()
         if quantity:
             try:
-                # Apply scaling logic
                 if name in non_scalable_ingredients:
-                    # Leave non-scalable ingredients untouched
                     adjusted_ingredient["quantity"] = quantity
                 else:
                     scale_factor = factor
-                    # Apply limits for sensitive ingredients
                     for sensitive, max_scale in sensitive_ingredients.items():
                         if sensitive in name:
                             scale_factor = min(scale_factor, max_scale)
                             break
-
-                    # Handle fractions like "1/2"
                     if "/" in quantity:
                         numerator, denominator = map(float, quantity.split("/"))
                         adjusted_quantity = scale_factor * (numerator / denominator)
-                    elif " " in quantity:  # Handle mixed fractions like "1 1/2"
+                    elif " " in quantity:
                         whole, fraction = quantity.split()
                         numerator, denominator = map(float, fraction.split("/"))
                         adjusted_quantity = scale_factor * (float(whole) + numerator / denominator)
                     else:
                         adjusted_quantity = scale_factor * float(quantity)
-
-                    # Update the quantity
                     adjusted_ingredient["quantity"] = str(round(adjusted_quantity, 2)).rstrip(".0")
             except ValueError:
-                # If quantity can't be parsed, leave it as is
                 adjusted_ingredient["quantity"] = quantity
 
         adjusted_ingredients.append(adjusted_ingredient)
 
     return adjusted_ingredients
+
 def transform_instructions(instructions, ingredient_map={}, technique_map={}):
     transformed_instructions = []
     for line in instructions:
         line_lower = line.lower()
         
-        # Replace techniques
         for old_tech, new_tech in technique_map.items():
             if old_tech in line_lower:
                 line = line.replace(old_tech, ' or '.join(new_tech))
                 
-        # Replace ingredients
         for old_ing, new_ing in ingredient_map.items():
             if old_ing in line.lower():
                 line = line.replace(old_ing, ' or '.join(new_ing))
@@ -414,32 +374,55 @@ def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map
     }
     return new_recipe
 
+def write_to_file(input_ingredients, input_instructions, transformed_recipes, filename="recipe_transformations.txt"):
+    with open(filename, "w") as file:
+        file.write("Original Recipe:\n")
+        file.write("Ingredients:\n")
+        for ingredient in input_ingredients:
+            file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
+        
+        file.write("\nInstructions:\n")
+        for step in input_instructions:
+            file.write(f" - {step}\n")
+
+        file.write("\nTransformed Recipes:\n")
+        for style, recipe in transformed_recipes.items():
+            file.write(f"\n{style.title()} Style Recipe:\n")
+            file.write("Ingredients:\n")
+            for ingredient in recipe["ingredients"]:
+                file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
+            file.write("\nInstructions:\n")
+            for step in recipe["instructions"]:
+                file.write(f" - {step}\n")
+
+        file.write("\n--- End of Transformations ---\n")
+
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
-    # url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
-    url = "https://www.allrecipes.com/mediterranean-baked-cod-with-lemon-recipe-8576313"
+    url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
+    # url = "https://www.allrecipes.com/mediterranean-baked-cod-with-lemon-recipe-8576313"
     # fetch_page_from_url(url)
 
     ### Test extract methods per step below ###
 
     ingredients, instructions = fetch_page_from_url(url)
 
-    print(instructions)
-    print('\n')
+    # print(instructions)
+    # print('\n')
 
     # print(ingredients)
     # print('\n')
 
-    print(ingredients)
-    print('\n')
+    # print(ingredients)
+    # print('\n')
 
-    doubled_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 2)
-    print(doubled_ingredients)
-    print('\n')
+    # doubled_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 2)
+    # print(doubled_ingredients)
+    # print('\n')
 
-    halved_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 0.5)
-    print(halved_ingredients)
-    print('\n')
+    # halved_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 0.5)
+    # print(halved_ingredients)
+    # print('\n')
 
     # alternatives = find_ingredients(ingredients, to_vegetarian)
 
@@ -455,10 +438,48 @@ if __name__ == "__main__":
     # print(transformed_instructions)
     # print('\n')
 
-    transformed_instructions = transform_cooking_methods_to_refined(instructions, "roast")
+    # transformed_instructions = transform_cooking_methods(instructions, "roast")
 
     # print(transformed_instructions)
     # print('\n')
+
+    transformed_recipe_italian = transform_recipe(
+        ingredients, 
+        instructions, 
+        ingredient_map=italian_style["ingredients"], 
+        technique_map=italian_style["techniques"]
+    )
+
+    # print(transformed_recipe_italian["instructions"])
+    # print('\n')
+
+    transformed_recipe_mexican = transform_recipe(
+        ingredients, 
+        instructions, 
+        ingredient_map=mexican_style["ingredients"], 
+        technique_map=mexican_style["techniques"]
+    )
+
+    # print(transformed_recipe_mexican["instructions"])
+    # print('\n')
+
+    transformed_recipe_chinese = transform_recipe(
+        ingredients,
+        instructions,
+        ingredient_map=chinese_style["ingredients"],
+        technique_map=chinese_style["techniques"]
+    )
+
+    # print(transformed_recipe_chinese["instructions"])
+    # print('\n')
+
+    transformed_recipes = {
+        "italian": transformed_recipe_italian,
+        "mexican": transformed_recipe_mexican,
+        "chinese": transformed_recipe_chinese
+    }
+
+    write_to_file(ingredients, instructions, transformed_recipes)
 
     # methods_per_step = extract_cooking_methods_per_step(instructions)
     # print("\nCooking methods per step:")
