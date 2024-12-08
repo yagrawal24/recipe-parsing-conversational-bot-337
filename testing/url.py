@@ -498,7 +498,7 @@ def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map
 
     return {
         "ingredients": transformed_ingredients,
-        "instructions": transformed_instructions,
+        "instructions": transformed_instructions
     }
 
 
@@ -520,20 +520,20 @@ def write_to_file(input_ingredients, input_instructions, transformed_recipes, fi
         file.write("\nTransformed Recipes:\n")
         for style, recipe in transformed_recipes.items():
             file.write(f"\n{style.title()} Transformation:\n")
-            if style in ["doubled", "halved"]:
-                file.write("Ingredients:\n")
-                for ingredient in recipe:
-                    file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
-                file.write("\nInstructions:\n")
-                for step in input_instructions:
-                    file.write(f" - {step}\n")
-            else:
-                file.write("Ingredients:\n")
-                for ingredient in recipe["ingredients"]:
-                    file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
-                file.write("\nInstructions:\n")
-                for step in recipe["instructions"]:
-                    file.write(f" - {step}\n")
+            # if style in ["doubled", "halved"]:
+            #     file.write("Ingredients:\n")
+            #     for ingredient in recipe:
+            #         file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
+            #     file.write("\nInstructions:\n")
+            #     for step in input_instructions:
+            #         file.write(f" - {step}\n")
+            # else:
+            file.write("Ingredients:\n")
+            for ingredient in recipe["ingredients"]:
+                file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
+            file.write("\nInstructions:\n")
+            for step in recipe["instructions"]:
+                file.write(f" - {step}\n")
 
         file.write("\n--- End of Transformations ---\n")
 
@@ -544,9 +544,9 @@ if __name__ == "__main__":
 
     ingredients, instructions = fetch_page_from_url(url)
 
-    doubled_ingredients = adjust_ingredient_amounts(ingredients, 2)
+    doubled_ingredients = transform_recipe(ingredients, instructions, scale=2.0)
 
-    halved_ingredients = adjust_ingredient_amounts(ingredients, 0.5)
+    halved_ingredients = transform_recipe(ingredients, instructions, scale=0.5)
 
     vegetarian = transform_recipe(ingredients, instructions, ingredient_map = to_vegetarian)
     healthy = transform_recipe(ingredients, instructions, ingredient_map = to_healthy)
