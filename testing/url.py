@@ -263,19 +263,6 @@ def find_ingredients(ingredients, substitution_map):
             replacements.update(matches)
     return replacements
 
-# def replace_ingredients(ingredients, alternatives):
-#     updated_ingredients = ingredients.copy()
-
-#     for ingredient in updated_ingredients:
-#         ingredient_name = ingredient.get('name', '').strip().lower()
-
-#         for to_replace, replacer in alternatives:
-#             if to_replace in ingredient_name:
-#                 ingredient['name'] = replacer[0]
-#                 break
-
-#     return updated_ingredients
-
 def replace_ingredients(ingredients, alternatives):
     updated_ingredients = ingredients.copy()
 
@@ -289,25 +276,25 @@ def replace_ingredients(ingredients, alternatives):
 
     return updated_ingredients
 
-def transform_instructions(instructions, transformation_map):
-    transformed_instructions = []
+# def transform_instructions(instructions, transformation_map):
+#     transformed_instructions = []
 
-    for instruction in instructions:
-        transformed_instruction = instruction
+#     for instruction in instructions:
+#         transformed_instruction = instruction
 
-        for original, replacements in transformation_map.items():
-            # Join the replacements if they are a list
-            replacement = ", ".join(replacements) if isinstance(replacements, list) else replacements
-            transformed_instruction = re.sub(
-                r"\b" + re.escape(original) + r"\b", 
-                replacement, 
-                transformed_instruction, 
-                flags=re.IGNORECASE
-            )
+#         for original, replacements in transformation_map.items():
+#             # Join the replacements if they are a list
+#             replacement = ", ".join(replacements) if isinstance(replacements, list) else replacements
+#             transformed_instruction = re.sub(
+#                 r"\b" + re.escape(original) + r"\b", 
+#                 replacement, 
+#                 transformed_instruction, 
+#                 flags=re.IGNORECASE
+#             )
         
-        transformed_instructions.append(transformed_instruction)
+#         transformed_instructions.append(transformed_instruction)
 
-    return transformed_instructions
+#     return transformed_instructions
 
 def transform_cooking_methods_to_refined(instructions, to_method):
     cooking_methods_list = [
@@ -345,10 +332,37 @@ def transform_cooking_methods_to_refined(instructions, to_method):
 
     return transformed_instructions
 
+def transform_instructions(instructions, ingredient_map={}, technique_map={}):
+    transformed_instructions = []
+    for line in instructions:
+        line_lower = line.lower()
+        
+        # Replace techniques
+        for old_tech, new_tech in technique_map.items():
+            if old_tech in line_lower:
+                line = line.replace(old_tech, ' or '.join(new_tech))
+                
+        # Replace ingredients
+        for old_ing, new_ing in ingredient_map.items():
+            if old_ing in line.lower():
+                line = line.replace(old_ing, ' or '.join(new_ing))
+        
+        transformed_instructions.append(line)
+    return transformed_instructions
+
+
+def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map={}):
+    alternatives = find_ingredients(ingredients, ingredient_map)
+    new_recipe = {
+        "ingredients": replace_ingredients(ingredients, alternatives) if ingredient_map != {} else ingredients,
+        "instructions": transform_instructions(instructions, ingredient_map, technique_map) 
+    }
+    return new_recipe
 
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
-    url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
+    # url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
+    url = "https://www.allrecipes.com/mediterranean-baked-cod-with-lemon-recipe-8576313"
     # fetch_page_from_url(url)
 
     ### Test extract methods per step below ###
@@ -357,6 +371,18 @@ if __name__ == "__main__":
 
     print(instructions)
     print('\n')
+    
+    vegan_transform = transform_recipe(ingredients, instructions, to_vegetarian)
+    print(vegan_transform, '\n')
+    
+    healthy_transform = transform_recipe(ingredients, instructions, to_healthy)
+    print(healthy_transform, '\n')
+    
+    mexican_transform = transform_recipe(ingredients, instructions, mexican_style['ingredients'], mexican_style['techniques'])
+    print(mexican_transform, '\n')
+    
+    italian_transform = transform_recipe(ingredients, instructions, italian_style['ingredients'], italian_style['techniques'])
+    print(italian_transform, '\n')
 
     # print(ingredients)
     # print('\n')
@@ -370,15 +396,15 @@ if __name__ == "__main__":
     # print(ingredients)
     # print('\n')
 
-    # transformed_instructions = transform_instructions(instructions, to_healthy)
+    # transformed_instructions = transform_instructions(instructions, ingredient_map=to_healthy)
 
     # print(transformed_instructions)
     # print('\n')
 
-    transformed_instructions = transform_cooking_methods_to_refined(instructions, "roast")
+    # transformed_instructions = transform_cooking_methods_to_refined(instructions, "roast")
 
-    print(transformed_instructions)
-    print('\n')
+    # print(transformed_instructions)
+    # print('\n')
 
     # methods_per_step = extract_cooking_methods_per_step(instructions)
     # print("\nCooking methods per step:")
