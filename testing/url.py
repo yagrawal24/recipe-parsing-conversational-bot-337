@@ -376,7 +376,7 @@ def substr(word, list):
     return False
 
 # Handle scaling in ingredients list
-def adjust_ingredient_amounts_with_rules(ingredients, factor):
+def adjust_ingredient_amounts(ingredients, factor):
     sensitive_ingredients = {
         "salt": 1.5,
         "red pepper flakes": 1.5,
@@ -492,7 +492,7 @@ def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map
     transformed_instructions = transform_instructions(instructions_copy, ingredient_map, technique_map) if ingredient_map or technique_map else instructions_copy
     
     if scale != None:
-        transformed_ingredients = adjust_ingredient_amounts_with_rules(transformed_ingredients, scale)
+        transformed_ingredients = adjust_ingredient_amounts(transformed_ingredients, scale)
         transformed_instructions = scale_instructions(transformed_ingredients, transformed_instructions, scale)
 
     return {
