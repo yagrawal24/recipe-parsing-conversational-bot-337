@@ -87,6 +87,7 @@ chinese_style = {
         "chili powder": ["Sichuan chili flakes", "ground chili"],
         "red pepper flakes": ["Sichuan chili flakes"],
         "salt": ["soy sauce"],
+        "italian seasoning": ["Five spice powder"],
         "lemon zest": ["lime zest"],
         "bay leaves": ["star anise"],
     },
