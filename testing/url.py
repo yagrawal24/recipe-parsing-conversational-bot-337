@@ -435,7 +435,7 @@ def scale_instructions(ingredients, instructions, factor=None):
             measurements.add(ing["unit"].lower())
 
         if "name" in ing and ing["name"]:
-            ingredient_names.add(ing['descriptor'] + ing["name"] if 'descriptor' in ing.keys() else ing['name'])
+            ingredient_names.add(ing['descriptor'] +' ' + ing["name"] if 'descriptor' in ing.keys() else ing['name'])
 
     scaled_instructions = []
 
