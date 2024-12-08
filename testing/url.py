@@ -345,7 +345,19 @@ def transform_cooking_methods_to_refined(instructions, to_method):
 
     return transformed_instructions
 
-def adjust_ingredient_amounts(ingredients, factor):
+def adjust_ingredient_amounts_with_rules(ingredients, factor):
+    # Define sensitive ingredient rules
+    sensitive_ingredients = {
+        "salt": 1.5,  # Maximum scaling factor for salt
+        "red pepper flakes": 1.5,
+        "baking powder": 1.2,
+        "baking soda": 1.2,
+        "vinegar": 1.5,
+        "alcohol": 1.5
+    }
+    
+    non_scalable_ingredients = {"eggs", "vanilla extract", "yeast"}
+
     adjusted_ingredients = []
 
     for ingredient in ingredients:
@@ -353,21 +365,34 @@ def adjust_ingredient_amounts(ingredients, factor):
 
         # Handle the quantity field
         quantity = ingredient.get("quantity")
+        name = ingredient.get("name", "").lower().strip()
         if quantity:
             try:
-                # Handle fractions like "1/2"
-                if "/" in quantity:
-                    numerator, denominator = map(float, quantity.split("/"))
-                    adjusted_quantity = factor * (numerator / denominator)
-                elif " " in quantity:  # Handle mixed fractions like "1 1/2"
-                    whole, fraction = quantity.split()
-                    numerator, denominator = map(float, fraction.split("/"))
-                    adjusted_quantity = factor * (float(whole) + numerator / denominator)
+                # Apply scaling logic
+                if name in non_scalable_ingredients:
+                    # Leave non-scalable ingredients untouched
+                    adjusted_ingredient["quantity"] = quantity
                 else:
-                    adjusted_quantity = factor * float(quantity)
+                    scale_factor = factor
+                    # Apply limits for sensitive ingredients
+                    for sensitive, max_scale in sensitive_ingredients.items():
+                        if sensitive in name:
+                            scale_factor = min(scale_factor, max_scale)
+                            break
 
-                # Update the quantity
-                adjusted_ingredient["quantity"] = str(round(adjusted_quantity, 2)).rstrip(".0")
+                    # Handle fractions like "1/2"
+                    if "/" in quantity:
+                        numerator, denominator = map(float, quantity.split("/"))
+                        adjusted_quantity = scale_factor * (numerator / denominator)
+                    elif " " in quantity:  # Handle mixed fractions like "1 1/2"
+                        whole, fraction = quantity.split()
+                        numerator, denominator = map(float, fraction.split("/"))
+                        adjusted_quantity = scale_factor * (float(whole) + numerator / denominator)
+                    else:
+                        adjusted_quantity = scale_factor * float(quantity)
+
+                    # Update the quantity
+                    adjusted_ingredient["quantity"] = str(round(adjusted_quantity, 2)).rstrip(".0")
             except ValueError:
                 # If quantity can't be parsed, leave it as is
                 adjusted_ingredient["quantity"] = quantity
@@ -375,7 +400,6 @@ def adjust_ingredient_amounts(ingredients, factor):
         adjusted_ingredients.append(adjusted_ingredient)
 
     return adjusted_ingredients
-
 
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
@@ -392,11 +416,11 @@ if __name__ == "__main__":
     print(ingredients)
     print('\n')
 
-    doubled_ingredients = adjust_ingredient_amounts(ingredients, 2)
+    doubled_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 2)
     print(doubled_ingredients)
     print('\n')
 
-    halved_ingredients = adjust_ingredient_amounts(ingredients, 0.5)
+    halved_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 0.5)
     print(halved_ingredients)
     print('\n')
 
