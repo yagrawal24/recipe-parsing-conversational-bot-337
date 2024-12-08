@@ -338,6 +338,7 @@ def transform_cooking_methods(instructions, to_method):
 
     return transformed_instructions
 
+<<<<<<< HEAD
 
 ###
 ### Replace quantities in ingredients and instructions
@@ -377,6 +378,9 @@ def substr(word, list):
 
 # Handle scaling in ingredients list
 def adjust_ingredient_amounts_with_rules(ingredients, factor):
+=======
+def adjust_ingredient_amounts(ingredients, factor):
+>>>>>>> 6bcd162734c81d34b0c6ebe18adfac60df4f6246
     sensitive_ingredients = {
         "salt": 1.5,
         "red pepper flakes": 1.5,
@@ -519,14 +523,7 @@ def write_to_file(input_ingredients, input_instructions, transformed_recipes, fi
         file.write("\nTransformed Recipes:\n")
         for style, recipe in transformed_recipes.items():
             file.write(f"\n{style.title()} Transformation:\n")
-            if style == "vegetarian":
-                file.write("Ingredients:\n")
-                for original, replacements in recipe.items():
-                    file.write(f" - {original}: replaced with {', '.join(replacements)}\n")
-                file.write("\nInstructions:\n")
-                for step in input_instructions:
-                    file.write(f" - {step}\n")
-            elif style in ["doubled", "halved"]:
+            if style in ["doubled", "halved"]:
                 file.write("Ingredients:\n")
                 for ingredient in recipe:
                     file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
@@ -547,47 +544,17 @@ if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
     url = "https://www.allrecipes.com/one-pot-chicken-pomodoro-recipe-8730087/"
     # url = "https://www.allrecipes.com/mediterranean-baked-cod-with-lemon-recipe-8576313"
-    # fetch_page_from_url(url)
-
-    ### Test extract methods per step below ###
 
     ingredients, instructions = fetch_page_from_url(url)
 
-    # print(instructions)
-    # print('\n')
+    doubled_ingredients = adjust_ingredient_amounts(ingredients, 2)
 
-    # print(ingredients)
-    # print('\n')
+    halved_ingredients = adjust_ingredient_amounts(ingredients, 0.5)
 
-    # print(ingredients)
-    # print('\n')
-
-    doubled_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 2)
-    # print(doubled_ingredients)
-    # print('\n')
-
-    halved_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 0.5)
-    # print(halved_ingredients)
-    # print('\n')
-
-    vegetarian = find_ingredients(ingredients, to_vegetarian)
-
-    # print(alternatives)
-
-    # ingredients = replace_ingredients(ingredients, alternatives)
-
-    # print(ingredients)
-    # print('\n')
-
-    # transformed_instructions = transform_instructions(instructions, ingredient_map=to_healthy)
-
-    # print(transformed_instructions)
-    # print('\n')
-
-    # transformed_instructions = transform_cooking_methods(instructions, "roast")
-
-    # print(transformed_instructions)
-    # print('\n')
+    vegetarian = transform_recipe(ingredients, instructions, ingredient_map = to_vegetarian)
+    healthy = transform_recipe(ingredients, instructions, ingredient_map = to_healthy)
+    gluten_free = transform_recipe(ingredients, instructions, ingredient_map = gluten_free)
+    lactose_free = transform_recipe(ingredients, instructions, ingredient_map = lactose_free)
 
     transformed_recipe_italian = transform_recipe(
         ingredients, 
@@ -596,18 +563,12 @@ if __name__ == "__main__":
         technique_map=italian_style["techniques"]
     )
 
-    # print(transformed_recipe_italian["instructions"])
-    # print('\n')
-
     transformed_recipe_mexican = transform_recipe(
         ingredients, 
         instructions, 
         ingredient_map=mexican_style["ingredients"], 
         technique_map=mexican_style["techniques"]
     )
-
-    # print(transformed_recipe_mexican["instructions"])
-    # print('\n')
 
     transformed_recipe_chinese = transform_recipe(
         ingredients,
@@ -616,11 +577,11 @@ if __name__ == "__main__":
         technique_map=chinese_style["techniques"]
     )
 
-    # print(transformed_recipe_chinese["instructions"])
-    # print('\n')
-
     transformed_recipes = {
+        "gluten_free" : gluten_free,
+        "lactose_free" : lactose_free,
         "vegetarian" : vegetarian,
+        "healthy" : healthy,
         "doubled" : doubled_ingredients,
         "halved" : halved_ingredients,
         "italian": transformed_recipe_italian,
@@ -629,10 +590,3 @@ if __name__ == "__main__":
     }
 
     write_to_file(ingredients, instructions, transformed_recipes)
-
-    # methods_per_step = extract_cooking_methods_per_step(instructions)
-    # print("\nCooking methods per step:")
-    # for step_info in methods_per_step:
-    #     print(f"Step: {step_info['step']}")
-    #     print(f"Methods: {', '.join(step_info['methods'])}")
-    #     print("-" * 50)

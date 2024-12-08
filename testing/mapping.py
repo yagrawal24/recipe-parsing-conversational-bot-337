@@ -1,4 +1,3 @@
-# Vegetarian Transformations
 to_vegetarian = {
     "chicken": ["tofu", "seitan"],
     "beef": ["tempeh", "jackfruit"],
@@ -29,7 +28,6 @@ from_vegetarian = {
     "textured vegetable protein": ["ground beef", "ground chicken"],
 }
 
-# Health Transformations
 to_healthy = {
     "butter": ["olive oil", "avocado oil"],
     "oil": ["cooking spray", "olive oil"],
@@ -50,19 +48,6 @@ from_healthy = {
     "stevia": ["sugar", "honey"],
     "greek yogurt": ["cream", "sour cream"]
 }
-
-# Cuisine Styles (base ingredients for transformation)
-# chinese_style = {
-#     "core_ingredients": ["soy sauce", "ginger", "garlic", "sesame oil", "rice vinegar"],
-#     "spices": ["five spice", "white pepper"],
-#     "cooking_methods": ["stir fry", "steam", "braise"],
-#     "replacements": {
-#         "olive oil": "sesame oil",
-#         "vinegar": "rice vinegar",
-#         "pasta": "noodles",
-#         "herbs": "green onions"
-#     }
-# }
 
 chinese_style = {
     'ingredients': {
@@ -102,6 +87,7 @@ chinese_style = {
         "chili powder": ["Sichuan chili flakes", "ground chili"],
         "red pepper flakes": ["Sichuan chili flakes"],
         "salt": ["soy sauce"],
+        "italian seasoning": ["Five spice powder"],
         "lemon zest": ["lime zest"],
         "bay leaves": ["star anise"],
     },

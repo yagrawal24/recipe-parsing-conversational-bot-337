@@ -38,10 +38,61 @@ Instructions:
 
 Transformed Recipes:
 
-Vegetarian Transformation:
+Gluten_Free Transformation:
 Ingredients:
- - skinless boneless chicken breasts: replaced with tofu, seitan
- - chicken broth: replaced with vegetable broth, mushroom broth
+ - 1 pound  skinless boneless chicken breasts
+ - 1 teaspoon  salt
+ - 1 teaspoon  granules
+ - 1 teaspoon  seasoning
+ - 2 tablespoons  oil
+ - 1   shallot
+ - 4 cloves  garlic
+ - 1 (28 ounce) can  tomatoes
+ - 1/2 teaspoon  salt
+ - 1 teaspoon  white sugar
+ - 1/2 teaspoon  pepper flakes
+ - 1 tablespoon  basil
+ - 1 3/4 cups  chicken broth
+ - 1/4 cup  pinot grigio
+ - 16 ounces rice noodles
+
+Instructions:
+ - Gather all ingredients
+ - Heat a deep cast iron skillet over medium heat.
+ - Season chicken breasts with salt, garlic, and Italian seasoning.
+ - Pour 2 teaspoons oil into the skillet
+ - Once hot, add chicken
+ - Cook until golden, turning once, about 4 minutes per side
+ - Move chicken to one side of the skillet.
+ - Pour remaining oil into the skillet
+ - Add minced shallot; cook until softened, about 3 minutes
+ - Add the garlic, stir until fragrant, about 1 minute.
+ - Add the crushed tomatoes, salt, sugar, red pepper flakes, and basil
+ - Pour in chicken broth and wine
+ - Stir to combine.
+ - Add rice noodles or gluten-free pasta to the skillet
+ - Nestle chicken pieces on top of rice noodles or gluten-free pasta
+ - Reduce heat to medium-low
+ - Cover, and cook until rice noodles or gluten-free pasta is tender with a bite, about 8 minutes
+ - Taste and adjust seasoning; serve immediately.
+
+Lactose_Free Transformation:
+Ingredients:
+ - 1 pound  skinless boneless chicken breasts
+ - 1 teaspoon  salt
+ - 1 teaspoon  granules
+ - 1 teaspoon  seasoning
+ - 2 tablespoons  oil
+ - 1   shallot
+ - 4 cloves  garlic
+ - 1 (28 ounce) can  tomatoes
+ - 1/2 teaspoon  salt
+ - 1 teaspoon  white sugar
+ - 1/2 teaspoon  pepper flakes
+ - 1 tablespoon  basil
+ - 1 3/4 cups  chicken broth
+ - 1/4 cup  pinot grigio
+ - 16 ounces  conchiglie pasta
 
 Instructions:
  - Gather all ingredients
@@ -61,6 +112,82 @@ Instructions:
  - Nestle chicken pieces on top of pasta
  - Reduce heat to medium-low
  - Cover, and cook until pasta is tender with a bite, about 8 minutes
+ - Taste and adjust seasoning; serve immediately.
+
+Vegetarian Transformation:
+Ingredients:
+ - 1 pound tofu
+ - 1 teaspoon  salt
+ - 1 teaspoon  granules
+ - 1 teaspoon  seasoning
+ - 2 tablespoons  oil
+ - 1   shallot
+ - 4 cloves  garlic
+ - 1 (28 ounce) can  tomatoes
+ - 1/2 teaspoon  salt
+ - 1 teaspoon  white sugar
+ - 1/2 teaspoon  pepper flakes
+ - 1 tablespoon  basil
+ - 1 3/4 cups vegetable broth
+ - 1/4 cup  pinot grigio
+ - 16 ounces  conchiglie pasta
+
+Instructions:
+ - Gather all ingredients
+ - Heat a deep cast iron skillet over medium heat.
+ - Season tofu or seitan breasts with salt, garlic, and Italian seasoning.
+ - Pour 2 teaspoons oil into the skillet
+ - Once hot, add tofu or seitan
+ - Cook until golden, turning once, about 4 minutes per side
+ - Move tofu or seitan to one side of the skillet.
+ - Pour remaining oil into the skillet
+ - Add minced shallot; cook until softened, about 3 minutes
+ - Add the garlic, stir until fragrant, about 1 minute.
+ - Add the crushed tomatoes, salt, sugar, red pepper flakes, and basil
+ - Pour in tofu or seitan broth and wine
+ - Stir to combine.
+ - Add pasta to the skillet
+ - Nestle tofu or seitan pieces on top of pasta
+ - Reduce heat to medium-low
+ - Cover, and cook until pasta is tender with a bite, about 8 minutes
+ - Taste and adjust seasoning; serve immediately.
+
+Healthy Transformation:
+Ingredients:
+ - 1 pound  skinless boneless chicken breasts
+ - 1 teaspoon  salt
+ - 1 teaspoon  granules
+ - 1 teaspoon  seasoning
+ - 2 tablespoons cooking spray
+ - 1   shallot
+ - 4 cloves  garlic
+ - 1 (28 ounce) can  tomatoes
+ - 1/2 teaspoon  salt
+ - 1 teaspoon stevia
+ - 1/2 teaspoon  pepper flakes
+ - 1 tablespoon  basil
+ - 1 3/4 cups  chicken broth
+ - 1/4 cup  pinot grigio
+ - 16 ounces whole grain pasta
+
+Instructions:
+ - Gather all ingredients
+ - Heat a deep cast iron skillet over medium heat.
+ - Season chicken breasts with salt, garlic, and Italian seasoning.
+ - Pour 2 teaspoons cooking spray or olive oil into the skillet
+ - Once hot, add chicken
+ - Cook until golden, turning once, about 4 minutes per side
+ - Move chicken to one side of the skillet.
+ - Pour remaining cooking spray or olive oil into the skillet
+ - Add minced shallot; cook until softened, about 3 minutes
+ - Add the garlic, stir until fragrant, about 1 minute.
+ - Add the crushed tomatoes, salt, stevia or monk fruit sweetener, red pepper flakes, and basil
+ - Pour in chicken broth and wine
+ - Stir to combine.
+ - Add whole grain pasta or zucchini noodles to the skillet
+ - Nestle chicken pieces on top of whole grain pasta or zucchini noodles
+ - Reduce heat to medium-low
+ - Cover, and cook until whole grain pasta or zucchini noodles is tender with a bite, about 8 minutes
  - Taste and adjust seasoning; serve immediately.
 
 Doubled Transformation:
