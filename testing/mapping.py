@@ -193,6 +193,16 @@ italian_style = {
     }
 }
 
+# cooking_method_transforms = {
+#     "bake": ["fry", "grill", "air fry"],
+#     "fry": ["bake", "grill", "air fry"],
+#     "grill": ["bake", "pan sear", "broil"],
+#     "steam": ["boil", "microwave", "pressure cook"],
+#     "saute": ["stir fry", "grill", "bake"],
+#     "roast": ["air fry", "grill", "pan sear"],
+#     "broil": ["grill", "bake", "pan sear"]
+# }
+
 cooking_method_transforms = {
     "bake": ["fry", "grill", "air fry"],
     "fry": ["bake", "grill", "air fry"],
@@ -200,8 +210,14 @@ cooking_method_transforms = {
     "steam": ["boil", "microwave", "pressure cook"],
     "saute": ["stir fry", "grill", "bake"],
     "roast": ["air fry", "grill", "pan sear"],
-    "broil": ["grill", "bake", "pan sear"]
+    "broil": ["grill", "bake", "pan sear"],
+    "stir fry": ["saute", "grill", "roast"],
+    "poach": ["boil", "simmer", "steam"],
+    "braise": ["roast", "simmer", "stew"],
+    "toast": ["bake", "broil", "grill"],
+    "boil": ["steam", "poach", "pressure cook"]
 }
+
 
 gluten_free = {
     "flour": ["almond flour", "rice flour", "cornstarch"],
