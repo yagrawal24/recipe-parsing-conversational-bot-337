@@ -10,6 +10,11 @@ from rapidfuzz import fuzz, process
 from mapping import *
 from difflib import SequenceMatcher
 import copy
+from fractions import Fraction
+
+###
+### Parsing
+###
 
 # Load SpaCy model
 nlp = spacy.load("en_core_web_md")
@@ -151,9 +156,7 @@ def classify(ingredient):
     for e in doc:
         if e.pos_ == "VERB" or e.pos_ == "ADV":
             pairs.append(["preparation", e.text])
-        elif e.pos_ == "ADJ":
-            pairs.append(["descriptor", e.text])
-        elif e.pos_ == "NOUN" or e.pos_ == "PROPN":
+        else:
             pairs.append(["name", e.text])
     
     return pairs
@@ -219,6 +222,11 @@ def get_step_information(instruction, info_source, type, threshold=80):
             
     return list(set(matches))
 
+###
+### Ingredient Replacement
+###
+
+# Find ingredients that should be changed and what they should change to
 def find_ingredients(ingredients, substitution_map):
     def singularize(word):
         if word.endswith('ies'):
@@ -262,6 +270,7 @@ def find_ingredients(ingredients, substitution_map):
             replacements.update(matches)
     return replacements
 
+# Actually replace ingredients in new ingredients list
 def replace_ingredients(ingredients, alternatives):
     updated_ingredients = copy.deepcopy(ingredients)
 
@@ -275,6 +284,30 @@ def replace_ingredients(ingredients, alternatives):
 
     return updated_ingredients
 
+###
+### Adjust the instructions
+###
+
+# Adjust instructions with ingredient changes
+def transform_instructions(instructions, ingredient_map={}, technique_map={}):
+    transformed_instructions = []
+
+    for line in instructions:
+        line_lower = line.lower()
+
+        for old_ing, new_ing in ingredient_map.items():
+            if old_ing in line_lower:
+                line_lower = line_lower.replace(old_ing, ' or '.join(new_ing))
+
+        for old_tech, new_tech in technique_map.items():
+            if old_tech in line_lower:
+                line_lower = line_lower.replace(old_tech, ' or '.join(new_tech))
+
+        transformed_instructions.append(line_lower)
+
+    return transformed_instructions
+
+# Adjust the instructions based on a new primary cooking method [doesn't fully work]
 def transform_cooking_methods(instructions, to_method):
     cooking_methods_list = [
         "bake", "fry", "grill", "steam", "simmer", "roast", "saute", "broil",
@@ -305,6 +338,44 @@ def transform_cooking_methods(instructions, to_method):
 
     return transformed_instructions
 
+
+###
+### Replace quantities in ingredients and instructions
+###
+
+### Handles fractions in instructions
+def parse_fraction(quantity_str):
+    parts = quantity_str.split()
+    if len(parts) == 1:
+        if '/' in parts[0]:
+            numerator, denominator = parts[0].split('/')
+            return Fraction(int(numerator), int(denominator))
+        else:
+            return Fraction(str(float(parts[0])))
+    else:
+        whole = int(parts[0])
+        frac_part = parts[1]
+        numerator, denominator = frac_part.split('/')
+        return Fraction(whole * int(denominator) + int(numerator), int(denominator))
+
+def format_fraction(frac):
+    if frac.denominator == 1:
+        return str(frac.numerator)
+    else:
+        whole = frac.numerator // frac.denominator
+        remainder = frac.numerator % frac.denominator
+        if whole == 0:
+            return f"{remainder}/{frac.denominator}"
+        else:
+            return f"{whole} {remainder}/{frac.denominator}"
+        
+def substr(word, list):
+    for i in list:
+        if word in i or i in word:
+            return True
+    return False
+
+# Handle scaling in ingredients list
 def adjust_ingredient_amounts_with_rules(ingredients, factor):
     sensitive_ingredients = {
         "salt": 1.5,
@@ -350,31 +421,79 @@ def adjust_ingredient_amounts_with_rules(ingredients, factor):
 
     return adjusted_ingredients
 
-def transform_instructions(instructions, ingredient_map={}, technique_map={}):
-    transformed_instructions = []
+# Handle scaling in instructions
+def scale_instructions(ingredients, instructions, factor=None):
+    if not factor:
+        return instructions
+
+    measurements = set()
+    ingredient_names = set()
+    for ing in ingredients:
+        if "unit" in ing and ing["unit"]:
+            measurements.add(ing["unit"].lower())
+
+        if "name" in ing and ing["name"]:
+            # first_word = ing["name"].split()[0].lower()
+            ingredient_names.add(ing["name"])
+
+    scaled_instructions = []
 
     for line in instructions:
-        line_lower = line.lower()
+        words = line.split()
+        i = 0
+        while i < len(words):
+            word = words[i]
+            
+            # Handles mixed fractions (i.e. 1 1/2)
+            if i + 1 < len(words):
+                try:
+                    whole_num = float(word)
+                    next_token = words[i+1]
+                    if '/' in next_token:
+                        combined = f"{word} {next_token}"
+                        del words[i+1]
+                        word = combined
+                except ValueError:
+                    pass
+            
+            # look for fractions
+            parsed_value = None
+            try:
+                parsed_value = parse_fraction(word)
+            except:
+                pass
+            
+            # check if next word is found in our ingredients list (i.e. teaspoon)
+            if parsed_value is not None and i + 1 < len(words):
+                next_word = words[i+1].lower()
+                if next_word != "to" and next_word != "F" and (substr(next_word, measurements) or substr(next_word, ingredient_names)):
+                    new_quantity = parsed_value * factor
+                    if new_quantity.is_integer():
+                        words[i] = str(int(new_quantity))
+                    else:
+                        words[i] = str(new_quantity)
+             
 
-        for old_ing, new_ing in ingredient_map.items():
-            if old_ing in line_lower:
-                line = line.replace(old_ing, ' or '.join(new_ing))
+            i += 1
 
-        for old_tech, new_tech in technique_map.items():
-            if old_tech in line_lower:
-                line = line.replace(old_tech, ' or '.join(new_tech))
+        scaled_instructions.append(" ".join(words))
 
-        transformed_instructions.append(line)
+    return scaled_instructions
 
-    return transformed_instructions
-
-def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map={}):
+###
+### Single function needed to make any recipe transformation (except for change in primary method)
+###
+def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map={}, scale=None):
     ingredients_copy = copy.deepcopy(ingredients)
     instructions_copy = copy.deepcopy(instructions)
 
     alternatives = find_ingredients(ingredients_copy, ingredient_map)
     transformed_ingredients = replace_ingredients(ingredients_copy, alternatives) if ingredient_map else ingredients_copy
-    transformed_instructions = transform_instructions(instructions_copy, ingredient_map, technique_map)
+    transformed_instructions = transform_instructions(instructions_copy, ingredient_map, technique_map) if ingredient_map or technique_map else instructions_copy
+    
+    if scale != None:
+        transformed_ingredients = adjust_ingredient_amounts_with_rules(transformed_ingredients, scale)
+        transformed_instructions = scale_instructions(transformed_ingredients, transformed_instructions, scale)
 
     return {
         "ingredients": transformed_ingredients,
@@ -382,6 +501,10 @@ def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map
     }
 
 
+
+###
+### Print to human-readable format
+###
 def write_to_file(input_ingredients, input_instructions, transformed_recipes, filename="recipe_transformations.txt"):
     with open(filename, "w") as file:
         file.write("Original Recipe:\n")
