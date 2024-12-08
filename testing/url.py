@@ -156,7 +156,9 @@ def classify(ingredient):
     for e in doc:
         if e.pos_ == "VERB" or e.pos_ == "ADV":
             pairs.append(["preparation", e.text])
-        else:
+        elif e.pos_ == "ADJ":
+            pairs.append(["preparation", e.text])
+        elif e.pos_ == "NOUN" or e.pos_ == "PROPN":
             pairs.append(["name", e.text])
     
     return pairs
