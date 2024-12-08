@@ -1,20 +1,20 @@
 Original Recipe:
 Ingredients:
- - 1 pound shredded chicken
- - 1 teaspoon Tajín
+ - 1 pound  skinless boneless chicken breasts
+ - 1 teaspoon  salt
  - 1 teaspoon  granules
  - 1 teaspoon  seasoning
  - 2 tablespoons  oil
  - 1   shallot
  - 4 cloves  garlic
  - 1 (28 ounce) can  tomatoes
- - 1/2 teaspoon Tajín
+ - 1/2 teaspoon  salt
  - 1 teaspoon  white sugar
  - 1/2 teaspoon  pepper flakes
- - 1 tablespoon scallions
- - 1 3/4 cups shredded chicken
+ - 1 tablespoon  basil
+ - 1 3/4 cups  chicken broth
  - 1/4 cup  pinot grigio
- - 16 ounces lo mein
+ - 16 ounces  conchiglie pasta
 
 Instructions:
  - Gather all ingredients
@@ -38,23 +38,124 @@ Instructions:
 
 Transformed Recipes:
 
-Italian Style Recipe:
+Vegetarian Transformation:
 Ingredients:
- - 1 pound shredded chicken
- - 1 teaspoon Tajín
+ - skinless boneless chicken breasts: replaced with tofu, seitan
+ - chicken broth: replaced with vegetable broth, mushroom broth
+
+Instructions:
+ - Gather all ingredients
+ - Heat a deep cast iron skillet over medium heat.
+ - Season chicken breasts with salt, garlic, and Italian seasoning.
+ - Pour 2 teaspoons oil into the skillet
+ - Once hot, add chicken
+ - Cook until golden, turning once, about 4 minutes per side
+ - Move chicken to one side of the skillet.
+ - Pour remaining oil into the skillet
+ - Add minced shallot; cook until softened, about 3 minutes
+ - Add the garlic, stir until fragrant, about 1 minute.
+ - Add the crushed tomatoes, salt, sugar, red pepper flakes, and basil
+ - Pour in chicken broth and wine
+ - Stir to combine.
+ - Add pasta to the skillet
+ - Nestle chicken pieces on top of pasta
+ - Reduce heat to medium-low
+ - Cover, and cook until pasta is tender with a bite, about 8 minutes
+ - Taste and adjust seasoning; serve immediately.
+
+Doubled Transformation:
+Ingredients:
+ - 2 pound  skinless boneless chicken breasts
+ - 1.5 teaspoon  salt
+ - 2 teaspoon  granules
+ - 2 teaspoon  seasoning
+ - 4 tablespoons  oil
+ - 2   shallot
+ - 8 cloves  garlic
+ - 2 (28 ounce) can  tomatoes
+ - 0.75 teaspoon  salt
+ - 2 teaspoon  white sugar
+ - 1 teaspoon  pepper flakes
+ - 2 tablespoon  basil
+ - 1 3/4 cups  chicken broth
+ - 0.5 cup  pinot grigio
+ - 32 ounces  conchiglie pasta
+
+Instructions:
+ - Gather all ingredients
+ - Heat a deep cast iron skillet over medium heat.
+ - Season chicken breasts with salt, garlic, and Italian seasoning.
+ - Pour 2 teaspoons oil into the skillet
+ - Once hot, add chicken
+ - Cook until golden, turning once, about 4 minutes per side
+ - Move chicken to one side of the skillet.
+ - Pour remaining oil into the skillet
+ - Add minced shallot; cook until softened, about 3 minutes
+ - Add the garlic, stir until fragrant, about 1 minute.
+ - Add the crushed tomatoes, salt, sugar, red pepper flakes, and basil
+ - Pour in chicken broth and wine
+ - Stir to combine.
+ - Add pasta to the skillet
+ - Nestle chicken pieces on top of pasta
+ - Reduce heat to medium-low
+ - Cover, and cook until pasta is tender with a bite, about 8 minutes
+ - Taste and adjust seasoning; serve immediately.
+
+Halved Transformation:
+Ingredients:
+ - 0.5 pound  skinless boneless chicken breasts
+ - 0.5 teaspoon  salt
+ - 0.5 teaspoon  granules
+ - 0.5 teaspoon  seasoning
+ - 1 tablespoons  oil
+ - 0.5   shallot
+ - 2 cloves  garlic
+ - 0.5 (28 ounce) can  tomatoes
+ - 0.25 teaspoon  salt
+ - 0.5 teaspoon  white sugar
+ - 0.25 teaspoon  pepper flakes
+ - 0.5 tablespoon  basil
+ - 1 3/4 cups  chicken broth
+ - 0.12 cup  pinot grigio
+ - 8 ounces  conchiglie pasta
+
+Instructions:
+ - Gather all ingredients
+ - Heat a deep cast iron skillet over medium heat.
+ - Season chicken breasts with salt, garlic, and Italian seasoning.
+ - Pour 2 teaspoons oil into the skillet
+ - Once hot, add chicken
+ - Cook until golden, turning once, about 4 minutes per side
+ - Move chicken to one side of the skillet.
+ - Pour remaining oil into the skillet
+ - Add minced shallot; cook until softened, about 3 minutes
+ - Add the garlic, stir until fragrant, about 1 minute.
+ - Add the crushed tomatoes, salt, sugar, red pepper flakes, and basil
+ - Pour in chicken broth and wine
+ - Stir to combine.
+ - Add pasta to the skillet
+ - Nestle chicken pieces on top of pasta
+ - Reduce heat to medium-low
+ - Cover, and cook until pasta is tender with a bite, about 8 minutes
+ - Taste and adjust seasoning; serve immediately.
+
+Italian Transformation:
+Ingredients:
+ - 1 pound  skinless boneless chicken breasts
+ - 1 teaspoon  salt
  - 1 teaspoon  granules
  - 1 teaspoon  seasoning
  - 2 tablespoons  oil
  - 1   shallot
  - 4 cloves  garlic
  - 1 (28 ounce) can  tomatoes
- - 1/2 teaspoon Tajín
+ - 1/2 teaspoon  salt
  - 1 teaspoon  white sugar
  - 1/2 teaspoon  pepper flakes
- - 1 tablespoon scallions
- - 1 3/4 cups shredded chicken
+ - 1 tablespoon  basil
+ - 1 3/4 cups  chicken broth
  - 1/4 cup  pinot grigio
- - 16 ounces lo mein
+ - 16 ounces  conchiglie pasta
 
 Instructions:
  - Gather all ingredients
@@ -76,7 +177,7 @@ Instructions:
  - Cover, and cook until pasta is tender with a bite, about 8 minutes
  - Taste and adjust seasoning; serve immediately.
 
-Mexican Style Recipe:
+Mexican Transformation:
 Ingredients:
  - 1 pound shredded chicken
  - 1 teaspoon Tajín
@@ -89,10 +190,10 @@ Ingredients:
  - 1/2 teaspoon Tajín
  - 1 teaspoon  white sugar
  - 1/2 teaspoon  pepper flakes
- - 1 tablespoon scallions
+ - 1 tablespoon cilantro
  - 1 3/4 cups shredded chicken
  - 1/4 cup  pinot grigio
- - 16 ounces lo mein
+ - 16 ounces  conchiglie pasta
 
 Instructions:
  - Gather all ingredients
@@ -114,21 +215,21 @@ Instructions:
  - Cover, and cook until pasta is tender with a bite, about 8 minutes
  - Taste and adjust seasoning; serve immediately.
 
-Chinese Style Recipe:
+Chinese Transformation:
 Ingredients:
- - 1 pound shredded chicken
- - 1 teaspoon Tajín
+ - 1 pound  skinless boneless chicken breasts
+ - 1 teaspoon soy sauce
  - 1 teaspoon  granules
  - 1 teaspoon  seasoning
  - 2 tablespoons  oil
  - 1   shallot
  - 4 cloves  garlic
  - 1 (28 ounce) can  tomatoes
- - 1/2 teaspoon Tajín
+ - 1/2 teaspoon soy sauce
  - 1 teaspoon  white sugar
  - 1/2 teaspoon  pepper flakes
- - 1 tablespoon scallions
- - 1 3/4 cups shredded chicken
+ - 1 tablespoon  basil
+ - 1 3/4 cups  chicken broth
  - 1/4 cup  pinot grigio
  - 16 ounces lo mein
 

@@ -9,6 +9,7 @@ import urllib.parse
 from rapidfuzz import fuzz, process
 from mapping import *
 from difflib import SequenceMatcher
+import copy
 
 # Load SpaCy model
 nlp = spacy.load("en_core_web_md")
@@ -262,7 +263,7 @@ def find_ingredients(ingredients, substitution_map):
     return replacements
 
 def replace_ingredients(ingredients, alternatives):
-    updated_ingredients = ingredients.copy()
+    updated_ingredients = copy.deepcopy(ingredients)
 
     for ingredient in updated_ingredients:
         ingredient_name = ingredient.get('name', '').strip().lower()
@@ -351,28 +352,35 @@ def adjust_ingredient_amounts_with_rules(ingredients, factor):
 
 def transform_instructions(instructions, ingredient_map={}, technique_map={}):
     transformed_instructions = []
+
     for line in instructions:
         line_lower = line.lower()
-        
+
+        for old_ing, new_ing in ingredient_map.items():
+            if old_ing in line_lower:
+                line = line.replace(old_ing, ' or '.join(new_ing))
+
         for old_tech, new_tech in technique_map.items():
             if old_tech in line_lower:
                 line = line.replace(old_tech, ' or '.join(new_tech))
-                
-        for old_ing, new_ing in ingredient_map.items():
-            if old_ing in line.lower():
-                line = line.replace(old_ing, ' or '.join(new_ing))
-        
+
         transformed_instructions.append(line)
+
     return transformed_instructions
 
-
 def transform_recipe(ingredients, instructions, ingredient_map={}, technique_map={}):
-    alternatives = find_ingredients(ingredients, ingredient_map)
-    new_recipe = {
-        "ingredients": replace_ingredients(ingredients, alternatives) if ingredient_map != {} else ingredients,
-        "instructions": transform_instructions(instructions, ingredient_map, technique_map) 
+    ingredients_copy = copy.deepcopy(ingredients)
+    instructions_copy = copy.deepcopy(instructions)
+
+    alternatives = find_ingredients(ingredients_copy, ingredient_map)
+    transformed_ingredients = replace_ingredients(ingredients_copy, alternatives) if ingredient_map else ingredients_copy
+    transformed_instructions = transform_instructions(instructions_copy, ingredient_map, technique_map)
+
+    return {
+        "ingredients": transformed_ingredients,
+        "instructions": transformed_instructions,
     }
-    return new_recipe
+
 
 def write_to_file(input_ingredients, input_instructions, transformed_recipes, filename="recipe_transformations.txt"):
     with open(filename, "w") as file:
@@ -387,13 +395,28 @@ def write_to_file(input_ingredients, input_instructions, transformed_recipes, fi
 
         file.write("\nTransformed Recipes:\n")
         for style, recipe in transformed_recipes.items():
-            file.write(f"\n{style.title()} Style Recipe:\n")
-            file.write("Ingredients:\n")
-            for ingredient in recipe["ingredients"]:
-                file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
-            file.write("\nInstructions:\n")
-            for step in recipe["instructions"]:
-                file.write(f" - {step}\n")
+            file.write(f"\n{style.title()} Transformation:\n")
+            if style == "vegetarian":
+                file.write("Ingredients:\n")
+                for original, replacements in recipe.items():
+                    file.write(f" - {original}: replaced with {', '.join(replacements)}\n")
+                file.write("\nInstructions:\n")
+                for step in input_instructions:
+                    file.write(f" - {step}\n")
+            elif style in ["doubled", "halved"]:
+                file.write("Ingredients:\n")
+                for ingredient in recipe:
+                    file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
+                file.write("\nInstructions:\n")
+                for step in input_instructions:
+                    file.write(f" - {step}\n")
+            else:
+                file.write("Ingredients:\n")
+                for ingredient in recipe["ingredients"]:
+                    file.write(f" - {ingredient['quantity']} {ingredient.get('unit', '')} {ingredient['name']}\n")
+                file.write("\nInstructions:\n")
+                for step in recipe["instructions"]:
+                    file.write(f" - {step}\n")
 
         file.write("\n--- End of Transformations ---\n")
 
@@ -416,15 +439,15 @@ if __name__ == "__main__":
     # print(ingredients)
     # print('\n')
 
-    # doubled_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 2)
+    doubled_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 2)
     # print(doubled_ingredients)
     # print('\n')
 
-    # halved_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 0.5)
+    halved_ingredients = adjust_ingredient_amounts_with_rules(ingredients, 0.5)
     # print(halved_ingredients)
     # print('\n')
 
-    # alternatives = find_ingredients(ingredients, to_vegetarian)
+    vegetarian = find_ingredients(ingredients, to_vegetarian)
 
     # print(alternatives)
 
@@ -474,6 +497,9 @@ if __name__ == "__main__":
     # print('\n')
 
     transformed_recipes = {
+        "vegetarian" : vegetarian,
+        "doubled" : doubled_ingredients,
+        "halved" : halved_ingredients,
         "italian": transformed_recipe_italian,
         "mexican": transformed_recipe_mexican,
         "chinese": transformed_recipe_chinese
