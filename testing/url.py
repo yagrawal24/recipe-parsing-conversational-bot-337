@@ -338,6 +338,7 @@ def transform_cooking_methods(instructions, to_method):
 
     return transformed_instructions
 
+<<<<<<< Updated upstream
 
 ###
 ### Replace quantities in ingredients and instructions
@@ -377,6 +378,9 @@ def substr(word, list):
 
 # Handle scaling in ingredients list
 def adjust_ingredient_amounts_with_rules(ingredients, factor):
+=======
+def adjust_ingredient_amounts(ingredients, factor):
+>>>>>>> Stashed changes
     sensitive_ingredients = {
         "salt": 1.5,
         "red pepper flakes": 1.5,
