@@ -345,6 +345,37 @@ def transform_cooking_methods_to_refined(instructions, to_method):
 
     return transformed_instructions
 
+def adjust_ingredient_amounts(ingredients, factor):
+    adjusted_ingredients = []
+
+    for ingredient in ingredients:
+        adjusted_ingredient = ingredient.copy()
+
+        # Handle the quantity field
+        quantity = ingredient.get("quantity")
+        if quantity:
+            try:
+                # Handle fractions like "1/2"
+                if "/" in quantity:
+                    numerator, denominator = map(float, quantity.split("/"))
+                    adjusted_quantity = factor * (numerator / denominator)
+                elif " " in quantity:  # Handle mixed fractions like "1 1/2"
+                    whole, fraction = quantity.split()
+                    numerator, denominator = map(float, fraction.split("/"))
+                    adjusted_quantity = factor * (float(whole) + numerator / denominator)
+                else:
+                    adjusted_quantity = factor * float(quantity)
+
+                # Update the quantity
+                adjusted_ingredient["quantity"] = str(round(adjusted_quantity, 2)).rstrip(".0")
+            except ValueError:
+                # If quantity can't be parsed, leave it as is
+                adjusted_ingredient["quantity"] = quantity
+
+        adjusted_ingredients.append(adjusted_ingredient)
+
+    return adjusted_ingredients
+
 
 if __name__ == "__main__":
     # url = "https://www.allrecipes.com/recipe/218091/classic-and-simple-meat-lasagna/"
@@ -355,11 +386,19 @@ if __name__ == "__main__":
 
     ingredients, instructions = fetch_page_from_url(url)
 
-    print(instructions)
+    # print(instructions)
+    # print('\n')
+
+    print(ingredients)
     print('\n')
 
-    # print(ingredients)
-    # print('\n')
+    doubled_ingredients = adjust_ingredient_amounts(ingredients, 2)
+    print(doubled_ingredients)
+    print('\n')
+
+    halved_ingredients = adjust_ingredient_amounts(ingredients, 0.5)
+    print(halved_ingredients)
+    print('\n')
 
     # alternatives = find_ingredients(ingredients, to_vegetarian)
 
@@ -375,10 +414,20 @@ if __name__ == "__main__":
     # print(transformed_instructions)
     # print('\n')
 
-    transformed_instructions = transform_cooking_methods_to_refined(instructions, "roast")
+    # transformed_instructions = transform_instructions(instructions, mexican_style["replacements"])
 
-    print(transformed_instructions)
-    print('\n')
+    # print(transformed_instructions)
+    # print('\n')
+
+    # transformed_instructions = transform_instructions(instructions, gluten_free)
+
+    # print(transformed_instructions)
+    # print('\n')
+
+    # transformed_instructions = transform_cooking_methods_to_refined(instructions, "roast")
+
+    # print(transformed_instructions)
+    # print('\n')
 
     # methods_per_step = extract_cooking_methods_per_step(instructions)
     # print("\nCooking methods per step:")
